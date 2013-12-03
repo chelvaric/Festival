@@ -153,10 +153,14 @@ namespace project.Model
         
         }
         public void Add()
-        { }
-        public void Delete()
+        { 
+           //hier komt de add
+        
+        }
+        public void search()
         { }
         public void Edit()
         { }
+   
     }
 }
