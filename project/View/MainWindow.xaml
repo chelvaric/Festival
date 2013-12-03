@@ -1,0 +1,65 @@
+﻿<Window x:Class="project.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v= "clr-namespace:project.View"
+        xmlns:vm= "clr-namespace:project.ViewModel"
+        
+        Title="MainWindow" Height="500" Width="600" ResizeMode="NoResize">
+    <Window.DataContext>
+        <vm:ApplicationVm />
+    </Window.DataContext>
+
+  
+
+    <Window.Resources>
+
+        <ItemsPanelTemplate x:Key="MijnButton">
+            
+            <WrapPanel></WrapPanel>
+        </ItemsPanelTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ContactVM}">
+        <v:Contact/>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type vm:LineUpVM}">
+            <v:LineUps/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:TicketingVM}">
+            <v:Ticketing/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ParametersVM}">
+            <v:Parameters/>
+        </DataTemplate>
+
+    </Window.Resources>
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30.8"/>
+            <RowDefinition/>
+            
+                
+                
+            
+            
+        </Grid.RowDefinitions >
+        
+        <ItemsControl ItemsSource="{Binding Pages}" ItemsPanel="{StaticResource MijnButton}">
+
+            <ItemsControl.ItemTemplate>
+                
+                <DataTemplate>
+                    <Button Content="{Binding Name}" Margin="10,0,10,10" Width="100px" Command="{Binding 
+                     DataContext.ChangePageCommand, 
+                     RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                     CommandParameter="{Binding}"/>
+                </DataTemplate>
+                
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ContentControl Content="{Binding CurrentPage}" Margin="0,30,0.6,-0.6" Grid.RowSpan="2" />
+    </Grid>
+</Window>
