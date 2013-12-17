@@ -4,7 +4,7 @@
         xmlns:v= "clr-namespace:project.View"
         xmlns:vm= "clr-namespace:project.ViewModel"
         
-        Title="MainWindow" Height="500" Width="600" ResizeMode="NoResize">
+        Title="MainWindow" Height="650" Width="600" ResizeMode="NoResize">
     <Window.DataContext>
         <vm:ApplicationVm />
     </Window.DataContext>

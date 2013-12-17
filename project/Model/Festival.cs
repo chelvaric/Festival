@@ -29,6 +29,21 @@ namespace project.Model
             set { _endDate = value; OnPropertyChanged("EndDate"); }
         }
 
+        private ObservableCollection<DateTime> _festivalDays;
+
+        public ObservableCollection<DateTime> FestivalDays
+        {
+            get
+            {
+
+                return _festivalDays;
+            }
+            set
+            {
+                _festivalDays = value;
+                OnPropertyChanged("FestivalDays");
+            }
+        }
         
 
         public static Festival HaalDatum()
@@ -38,7 +53,11 @@ namespace project.Model
             DbDataReader Reader = DataBase.GetData(sql);
             Reader.Read();
           lijst = new Festival() { StartDate = (DateTime)Reader["StartDate"],EndDate = (DateTime)Reader["EndDate"]};
-                
+          lijst.FestivalDays = new ObservableCollection<DateTime>();
+          for (var dt = lijst.StartDate; dt <= lijst.EndDate; dt = dt.AddDays(1))
+          {
+              lijst.FestivalDays.Add(dt);
+          }   
                 
              
             

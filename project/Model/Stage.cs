@@ -7,13 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace project.Model
 {
-    class Stage : INameId
+    class Stage : ObservableObject,INameId
     {
 
 
-
+       
         private string _id;
         public string ID
         {
@@ -24,8 +25,10 @@ namespace project.Model
             set
             {
                 _id = value;
+                OnPropertyChanged("ID");
             }
         }
+      
         private string _name;
         public string Name
         {
@@ -36,6 +39,7 @@ namespace project.Model
             set
             {
                    _name = value;
+                   OnPropertyChanged("Name");
             }
         }
 

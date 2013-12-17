@@ -152,15 +152,61 @@ namespace project.Model
           
         
         }
-        public void Add()
+        public static void Add(string name,string pic,string descrp,string facebook, string twitter,ObservableCollection<Genre> genreID)
         { 
            //hier komt de add
-        
+            string sql = "INSERT INTO bands(Name,Picture,Description,Facebook,Twitter) VALUES(@Name,@Picture,@Description,@Facebook,@Twitter)";
+            ParamsMaken(name, pic, descrp, facebook, twitter, sql);
+           ObservableCollection<Band> temp =  Bands();
+         int BandID  = temp.Count();
+         DbTransaction trans = DataBase.BeginTransaction();
+         foreach (Genre genre in genreID)
+         {
+             
+             sql = "INSERT INTO bands_genres(BandID,GenreID) VALUES(@BandID,@GenreID)";
+             DbParameter parid = DataBase.AddParameter("@BandID", BandID);
+             DbParameter pargenreid = DataBase.AddParameter("@GenreID", genre.ID);
+             DataBase.ModifyData(trans, sql, parid, pargenreid);
+         }
         }
-        public void search()
-        { }
-        public void Edit()
-        { }
+
+        private static void ParamsMaken(string name, string pic, string descrp, string facebook, string twitter, string sql,string BandID = null)
+        {
+            DbParameter parName = DataBase.AddParameter("@Name", name);
+            DbParameter parPic = DataBase.AddParameter("@Picture", pic);
+            DbParameter parDescrp = DataBase.AddParameter("@Description", descrp);
+            DbParameter parFacebook = DataBase.AddParameter("@Facebook", facebook);
+            DbParameter parTwitter = DataBase.AddParameter("@Twitter", twitter);
+            DbParameter parBandID = DataBase.AddParameter("@BandID", BandID);
+            DataBase.ModifyData(sql, parName, parPic, parDescrp, parFacebook, parTwitter,parBandID);
+        }
+        
+        public static void Edit(Band editBand)
+        {
+            string sql; 
+            
+            DbTransaction trans = DataBase.BeginTransaction();
+            
+                    sql = "DELETE FROM bands_genres WHERE BandID = @BandID ";
+                    DbParameter parid = DataBase.AddParameter("@BandID", editBand.ID);
+                  
+                    DataBase.ModifyData(trans, sql, parid);
+
+
+                    foreach (Genre genre in editBand.Genres)
+                    {
+
+                        sql = "INSERT INTO bands_genres(BandID,GenreID) VALUES(@BandID,@GenreID)";
+                         parid = DataBase.AddParameter("@BandID", editBand.ID);
+                        DbParameter pargenreid = DataBase.AddParameter("@GenreID", genre.ID);
+                        DataBase.ModifyData(trans, sql, parid, pargenreid);
+                    }
+        
+            sql = "UPDATE bands SET Name = @Name, Picture = @Picture, Description = @Description,Facebook = @Facebook, Twitter=@Twitter Where ID = @BandID   ";
+            ParamsMaken(editBand.Name, editBand.Picture, editBand.Description, editBand.Facebook, editBand.Twitter,sql,editBand.ID);
+       
+            
+        }
    
     }
 }

@@ -3,31 +3,62 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+               xmlns:C="clr-namespace:project.ViewModel.converters"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="600">
-    <Grid Margin="0,0,-160,0">
-        <ComboBox x:Name="cbstages" HorizontalAlignment="Left" Height="29" Margin="19,45,0,0" VerticalAlignment="Top" Width="190" ItemsSource="{Binding Stages}" DisplayMemberPath="Name"/>
-        <ListBox x:Name="lineup" HorizontalAlignment="Left" Height="132" Margin="19,98,0,0" VerticalAlignment="Top" Width="190" ItemsSource="{Binding LineUps}" />
-        <ComboBox x:Name="CbBands" HorizontalAlignment="Left" Height="34" Margin="17,255,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Bands}" SelectedItem="{Binding GeselecteerdeBand}"/>
-        <Button Content="Add" HorizontalAlignment="Left" Height="24" Margin="19,298,0,0" VerticalAlignment="Top" Width="79"/>
-        <Button Content="Delete" HorizontalAlignment="Left" Height="24" Margin="113,298,0,0" VerticalAlignment="Top" Width="79"/>
-        <Button Content="Move" HorizontalAlignment="Left" Height="24" Margin="19,327,0,0" VerticalAlignment="Top" Width="79"/>
-        <Button Content="Add" HorizontalAlignment="Left" Height="21" Margin="357,344,0,0" VerticalAlignment="Top" Width="66"/>
-        <Button Content="Edit" HorizontalAlignment="Left" Height="21" Margin="250,344,0,0" VerticalAlignment="Top" Width="75"/>
-        <Label Content="Naam" HorizontalAlignment="Left" Height="24" Margin="256,16,0,0" VerticalAlignment="Top" Width="112"/>
-        <TextBox x:Name="txtNaam" HorizontalAlignment="Left" Height="21" Margin="256,45,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Name}" VerticalAlignment="Top" Width="173"/>
-        <Label Content="omschrijfing" HorizontalAlignment="Left" Height="27" Margin="256,71,0,0" VerticalAlignment="Top" Width="75"/>
-        <TextBox x:Name="TxtOmschrijf" HorizontalAlignment="Left" Height="36" Margin="253,109,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Description}" VerticalAlignment="Top" Width="173"/>
-        <Image HorizontalAlignment="Left" Height="66" Margin="477,27,0,0" VerticalAlignment="Top" Width="96"/>
-        <Button Content="..." HorizontalAlignment="Left" Height="22" Margin="552,98,0,0" VerticalAlignment="Top" Width="21"/>
-        <ComboBox x:Name="CBstageDate" HorizontalAlignment="Left" Height="25" Margin="253,150,0,0" VerticalAlignment="Top" Width="170"  ItemsSource="{Binding Genres}" DisplayMemberPath="Name"/>
-        <ListBox x:Name="listgenres" HorizontalAlignment="Left" Height="47" Margin="336,183,0,0" VerticalAlignment="Top" Width="93" ItemsSource="{Binding GeselecteerdeBand.Genres}" DisplayMemberPath="Name"/>
-        <Button Content="add" HorizontalAlignment="Left" Height="20" Margin="250,180,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Content="delete" HorizontalAlignment="Left" Height="20" Margin="250,210,0,0" VerticalAlignment="Top" Width="75"/>
-        <Label Content="Facebook:" HorizontalAlignment="Left" Height="25" Margin="250,235,0,0" VerticalAlignment="Top" Width="173"/>
-        <TextBox x:Name="txtFacebook" HorizontalAlignment="Left" Height="20" Margin="250,265,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Facebook}" VerticalAlignment="Top" Width="173"/>
-        <Label Content="Twitter" HorizontalAlignment="Left" Height="25" Margin="250,287,0,0" VerticalAlignment="Top" Width="133"/>
-        <TextBox x:Name="txttwitter" HorizontalAlignment="Left" Height="22" Margin="250,317,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Twitter}" VerticalAlignment="Top" Width="173"/>
+             d:DesignHeight="600" d:DesignWidth="600">
+
+    <UserControl.Resources>
+        <C:MultiBindingConvert x:Key="MultiParamConverter"></C:MultiBindingConvert>
+    </UserControl.Resources>
+
+    <Grid Margin="0,0,0,-114">
+        <ComboBox x:Name="cbstages" HorizontalAlignment="Left" Height="29" Margin="17,109,0,0" VerticalAlignment="Top" Width="190" ItemsSource="{Binding Stages}" DisplayMemberPath="Name"/>
+        <ListBox x:Name="lineup" HorizontalAlignment="Left" Height="188" Margin="17,341,0,0" VerticalAlignment="Top" Width="190" ItemsSource="{Binding LineUps}" />
+        <ComboBox x:Name="CbBands" HorizontalAlignment="Left" Height="29" Margin="17,171,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Bands}" SelectedItem="{Binding GeselecteerdeBand}"/>
+        <Button Content="Add" HorizontalAlignment="Left" Height="24" Margin="17,534,0,0" VerticalAlignment="Top" Width="79"/>
+        <Button Content="Delete" HorizontalAlignment="Left" Height="24" Margin="121,534,0,0" VerticalAlignment="Top" Width="79"/>
+        <Button Content="Move" HorizontalAlignment="Left" Height="24" Margin="17,563,0,0" VerticalAlignment="Top" Width="79"/>
+        <Button Name="Addband" Content="AddBand" HorizontalAlignment="Left" Height="24" Margin="348,534,0,0" VerticalAlignment="Top" Width="75" Command="{Binding AddBandCommand}">
+            <Button.CommandParameter>
+                <MultiBinding Converter="{StaticResource MultiParamConverter}">
+                    <Binding Path="Text" ElementName="txtNaam"/>
+                    <Binding Path="Source" ElementName="Picture"/>
+                    <Binding Path="Text" ElementName="TxtOmschrijf"/>
+                    <Binding Path="Text" ElementName="txtFacebook" />
+                    <Binding Path="Text" ElementName="txtTwitter"  />
+                    <Binding Path="ItemsSource" ElementName="listgenres"/>
+                </MultiBinding>
+
+            </Button.CommandParameter>
+        </Button>
+        <Button Content="Edit" HorizontalAlignment="Left" Height="24" Margin="250,534,0,0" VerticalAlignment="Top" Width="75" Command="{Binding EditBandCommand}"/>
+        <Label Content="Naam" HorizontalAlignment="Left" Height="24" Margin="250,27,0,0" VerticalAlignment="Top" Width="112"/>
+        <TextBox x:Name="txtNaam" HorizontalAlignment="Left" Height="21" Margin="250,56,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Name}" VerticalAlignment="Top" Width="173"/>
+        <Label Content="omschrijfing" HorizontalAlignment="Left" Height="27" Margin="250,82,0,0" VerticalAlignment="Top" Width="75"/>
+        <TextBox x:Name="TxtOmschrijf" HorizontalAlignment="Left" Height="86" Margin="250,114,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Description}" VerticalAlignment="Top" Width="173"/>
+        <Image x:Name="Picture" HorizontalAlignment="Left" Height="223" Margin="431,27,0,0" VerticalAlignment="Top" Width="159" Source="{Binding PicSource}" Stretch="Fill"/>
+        <Button Content="..." HorizontalAlignment="Left" Height="22" Margin="552,263,0,0" VerticalAlignment="Top" Width="21" Command="{Binding LoadPicture}"/>
+        <ComboBox x:Name="CBGenres" HorizontalAlignment="Left" Height="25" Margin="250,249,0,0" VerticalAlignment="Top" Width="173"  ItemsSource="{Binding Genres}" SelectedItem="{Binding SelectedGenreForBand}" DisplayMemberPath="Name"/>
+        <ListBox x:Name="listgenres" HorizontalAlignment="Left" Height="113" Margin="250,279,0,0" VerticalAlignment="Top" Width="173" ItemsSource="{Binding GeselecteerdeBand.Genres}" DisplayMemberPath="Name" SelectedItem="{Binding GeselecteerdeGenreInAddedGenres}" />
+        <Button Content="add" HorizontalAlignment="Left" Height="20" Margin="250,397,0,0" VerticalAlignment="Top" Width="75" Command="{Binding AddGenreCommand}" >
+            <Button.CommandParameter>
+                <Binding Path="SelectedItem" ElementName="CBGenres"/>
+            </Button.CommandParameter>
+        </Button>
+        <Button Content="delete" HorizontalAlignment="Left" Height="20" Margin="348,397,0,0" VerticalAlignment="Top" Width="75" Command="{Binding DeleteGenreCommand}"/>
+        <Label Content="Facebook:" HorizontalAlignment="Left" Height="25" Margin="250,422,0,0" VerticalAlignment="Top" Width="173"/>
+        <TextBox x:Name="txtFacebook" HorizontalAlignment="Left" Height="20" Margin="250,452,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Facebook}" VerticalAlignment="Top" Width="173"/>
+        <Label Content="Twitter" HorizontalAlignment="Left" Height="25" Margin="250,477,0,0" VerticalAlignment="Top" Width="133"/>
+        <TextBox x:Name="txtTwitter" HorizontalAlignment="Left" Height="22" Margin="250,502,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Twitter}" VerticalAlignment="Top" Width="173"/>
+        <ComboBox x:Name="cbDays" HorizontalAlignment="Left" Height="29" Margin="17,43,0,0" VerticalAlignment="Top" Width="190" ItemsSource="{Binding FestivalDays}" />
+        <Label Content="Stages:" HorizontalAlignment="Left" Margin="17,78,0,0" VerticalAlignment="Top" Width="79"/>
+        <Label Content="Dag:" HorizontalAlignment="Left" Height="27" Margin="19,16,0,0" VerticalAlignment="Top" Width="107"/>
+        <Label x:Name="lblbands" Content="Bands:" HorizontalAlignment="Left" Height="23" Margin="19,143,0,0" VerticalAlignment="Top" Width="49"/>
+        <Label Content="start tijd:" HorizontalAlignment="Left" Height="27" Margin="19,205,0,0" VerticalAlignment="Top" Width="107"/>
+        <Label Content="eind tijd:" HorizontalAlignment="Left" Height="27" Margin="17,266,0,0" VerticalAlignment="Top" Width="107"/>
+        <ComboBox x:Name="cbStartTijd" HorizontalAlignment="Left" Height="29" Margin="17,232,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding StartTijden}"/>
+        <ComboBox x:Name="CbEindTijd" HorizontalAlignment="Left" Height="29" Margin="17,293,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding EindTijden}"/>
+        <Label Content="Genre:" HorizontalAlignment="Left" Height="26" Margin="250,218,0,0" VerticalAlignment="Top" Width="115"/>
 
     </Grid>
 </UserControl>
