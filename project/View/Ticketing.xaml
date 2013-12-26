@@ -77,5 +77,6 @@
         <TextBox x:Name="txtEmail" HorizontalAlignment="Left" Height="16" Margin="336,66,0,0" TextWrapping="Wrap" Text="email" VerticalAlignment="Top" Width="233"/>
         <Button Content="delete" HorizontalAlignment="Left" Height="21" Margin="145,177,0,0" VerticalAlignment="Top" Width="52" Command="{Binding DeleteTypeCommand}"/>
         <Button Content="delete" HorizontalAlignment="Left" Height="22" Margin="422,217,0,0" VerticalAlignment="Top" Width="58" Command="{Binding DeleteTicketCommand}"/>
+        <Button Content="Print" HorizontalAlignment="Left" Height="21" Margin="422,248,0,0" VerticalAlignment="Top" Width="58" Command="{Binding MaakTicketCommand}"/>
     </Grid>
 </UserControl>

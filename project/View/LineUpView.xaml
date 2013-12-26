@@ -8,22 +8,23 @@
              mc:Ignorable="d" d:DesignWidth="500" Height="585.6">
     <UserControl.Resources>
         <DataTemplate x:Key="DataShow">
-            <Grid >
-               
-                <StackPanel >
-                <Label Content="Stage:" />
-                    <TextBlock Text="{Binding Stage.Name}" />
-                   
-                    <Label Content="Band:" />
-                <TextBlock Text="{Binding Band.Name}" />
-            <Label Content="Date:" />
-                <TextBlock Text="{Binding Date}"/>
+            <Grid  >
+
+                <StackPanel Orientation="Horizontal">
+                    <Label Margin="0,0,0,0" Content="Stage:" />
+                    <TextBlock Margin="0,5,0,0" Text="{Binding Stage.Name}" Foreground="Blue"/>
+
+                    <Label Margin="0,0,0,0" Content="Band:" />
+                    <TextBlock Margin="0,5,0,0" Text="{Binding Band.Name}" Foreground="Blue"/>
+                    <Label Margin="0,0,0,0" Content="Date:" />
+                    <TextBlock Margin="0,5,0,0" Text="{Binding Date}" Foreground="Blue"/>
                 </StackPanel>
+                <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                 <Label Content="From:" />
-                <TextBlock Text="{Binding From}"/>
+                <TextBlock Margin="0,5,0,0" Text="{Binding From}" Foreground="Blue"/>
                 <Label Content="Till:" />
-                <TextBlock Text="{Binding Till}"/>
-         
+                    <TextBlock Margin="0,5,0,0" Text="{Binding Till}" Foreground="Blue"/>
+                </StackPanel>
 
             </Grid>
 

@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace project.Model
 {
-    class LineUp : ObservableObject
+    class LineUp : ObservableObject, IDataErrorInfo
     {
         private string _iD;
 
@@ -18,23 +20,23 @@ namespace project.Model
             get { return _iD; }
             set { _iD = value; }
         }
-        private string _from;
-
-        public string From
+        private DateTime _from;
+        [Required]
+        public DateTime From
         {
             get { return _from; }
             set { _from = value; }
         }
-        private string  _till;
-
-        public string  Till
+        private DateTime  _till;
+        [Required]
+        public DateTime  Till
         {
             get { return _till; }
             set { _till = value; }
         }
 
         private Stage _stage;
-
+        [Required]
         public Stage Stage
         {
             get { return _stage; }
@@ -42,7 +44,7 @@ namespace project.Model
         }
 
         private DateTime _date;
-
+        [Required]
         public DateTime Date
         {
             get { return _date; }
@@ -50,7 +52,7 @@ namespace project.Model
         }
 
         private Band _band;
-
+        [Required]
         public Band Band
         {
             get { return _band; }
@@ -74,8 +76,8 @@ namespace project.Model
 
                 temp.ID = data["ID"].ToString();
                 temp.Date = (DateTime)data["Date"];
-                temp.From = data["From"].ToString();
-                temp.Till = data["Till"].ToString();
+                temp.From = (DateTime)data["From"];
+                temp.Till = (DateTime)data["Till"];
                 temp.Stage =  Stage.GetbyID(int.Parse(data["StageID"].ToString()));
                 temp.Band = Band.BandByID(int.Parse(data["BandID"].ToString()));
                 templijst.Add(temp);
@@ -148,8 +150,8 @@ namespace project.Model
 
                 temp.ID = data["ID"].ToString();
                 temp.Date = (DateTime)data["Date"];
-                temp.From = data["From"].ToString();
-                temp.Till = data["Till"].ToString();
+                temp.From = (DateTime)data["From"];
+                temp.Till = (DateTime)data["Till"];
                 temp.Stage = Stage.GetbyID(int.Parse(data["StageID"].ToString()));
                 temp.Band = Band.BandByID(int.Parse(data["BandID"].ToString()));
                 templijst.Add(temp);
@@ -160,6 +162,69 @@ namespace project.Model
             return templijst;
 
         }
-      
+        public static void DeleteLineUp(string id)
+        {
+
+            string sql = "DELETE FROM lineup WHERE ID = @ID";
+            DbParameter parID = DataBase.AddParameter("@ID", id);
+            DataBase.ModifyData(sql, parID);
+        }
+
+        public static void ADDLineUp(LineUp lineup)
+        {
+            string sql = "INSERT INTO lineup VALUES (@From,@Till,@Date,@Stage,@Band)";
+            MakePars(lineup, sql);
+        
+        }
+        public static void EditLineUp(LineUp lineup)
+        {
+            string sql = "UPDATE lineup SET From = @From,Till = @Till, Date= @Date, Stage = @Stage, Band = @Band WHERE ID = @ID";
+            MakePars(lineup, sql,lineup.ID);
+        
+        }
+
+        private static void MakePars(LineUp lineup, string sql,string ID="")
+        {
+            DbParameter parID = DataBase.AddParameter("@ID", lineup.ID);
+            DbParameter parDate = DataBase.AddParameter("@Date", lineup.Date);
+            DbParameter parFrom = DataBase.AddParameter("@From", lineup.From);
+            DbParameter parTill = DataBase.AddParameter("@Till", lineup.Till);
+            DbParameter parStage = DataBase.AddParameter("@Stage", lineup.Stage.ID);
+            DbParameter parBand = DataBase.AddParameter("@Band", lineup.Band.ID);
+            if (ID == null)
+            {
+                DataBase.ModifyData(sql, parDate, parFrom, parTill, parStage, parBand, parID);
+            }
+            else
+            {
+                DataBase.ModifyData(sql, parDate, parFrom, parTill, parStage, parBand);
+            }
+        }
+
+
+        public string Error
+        {
+            get { return "verkeerde model"; }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                try
+                {
+                    object value = this.GetType().GetProperty(columnName).GetValue(this);
+                    Validator.ValidateProperty(value, new ValidationContext(this, null, null)
+                    {
+                        MemberName = columnName
+                    });
+                }
+                catch (ValidationException ex)
+                {
+                    return ex.Message;
+                }
+                return String.Empty;
+            }
+        }
     }
 }

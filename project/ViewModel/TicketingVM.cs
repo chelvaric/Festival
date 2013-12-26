@@ -1,8 +1,11 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using GalaSoft.MvvmLight.Command;
 using project.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -212,6 +215,48 @@ namespace project.ViewModel
 
             }
 
+            public ICommand MaakTicketCommand
+            {
+
+                get { return new RelayCommand(MakeTicket, CanMakeTicket); }
+
+            }
+            public void MakeTicket()
+            {
+                
+                    string filename = GeselecteerdeTicket.TicketHolder + ".docx";
+                    File.Copy("template.docx", filename, true);
+
+                    WordprocessingDocument newdoc = WordprocessingDocument.Open(filename, true);
+                    IDictionary<String, BookmarkStart> bookmarks = new Dictionary<String, BookmarkStart>();
+                    foreach (BookmarkStart bms in newdoc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
+                    {
+                        bookmarks[bms.Name] = bms;
+                    }
+
+                    // KeyValuePair<string, int>
+
+                    bookmarks["Name"].Parent.InsertAfter<DocumentFormat.OpenXml.Wordprocessing.Run>(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text(GeselecteerdeTicket.TicketHolder)), bookmarks["Name"]);
+
+                    bookmarks["Email"].Parent.InsertAfter<DocumentFormat.OpenXml.Wordprocessing.Run>(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text(GeselecteerdeTicket.TicketHolderEmail)), bookmarks["Email"]);
+                    bookmarks["TicketType"].Parent.InsertAfter<DocumentFormat.OpenXml.Wordprocessing.Run>(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text(GeselecteerdeTicket.TicketType.Name)), bookmarks["TicketType"]);
+                    bookmarks["Amount"].Parent.InsertAfter<DocumentFormat.OpenXml.Wordprocessing.Run>(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text(GeselecteerdeTicket.Amount.ToString())), bookmarks["Amount"]);
+                    bookmarks["Price"].Parent.InsertAfter<DocumentFormat.OpenXml.Wordprocessing.Run>(new DocumentFormat.OpenXml.Wordprocessing.Run(new DocumentFormat.OpenXml.Wordprocessing.Text((GeselecteerdeTicket.Amount * GeselecteerdeTicket.TicketType.Price).ToString())), bookmarks["Price"]);
+
+                    newdoc.Close();
+                
+
+
+            }
+
+            public bool CanMakeTicket()
+            {
+
+                if (GeselecteerdeTicket != null)
+                { return true; }
+                else
+                {return false;}
+            }
            
     }
 }

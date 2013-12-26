@@ -1,25 +1,27 @@
 ﻿<UserControl x:Class="project.View.LineUps"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-               xmlns:C="clr-namespace:project.ViewModel.converters"
+             xmlns:C="clr-namespace:project.ViewModel.converters"
              xmlns:ctrl="clr-namespace:project.View"
+           
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="600">
+             d:DesignHeight="600" d:DesignWidth="800">
 
     <UserControl.Resources>
         <C:MultiBindingConvert x:Key="MultiParamConverter"></C:MultiBindingConvert>
     </UserControl.Resources>
 
     <Grid Margin="0,0,0,-114">
-        <ComboBox x:Name="cbstages" HorizontalAlignment="Left" Height="29" Margin="17,109,0,0" VerticalAlignment="Top" Width="190" ItemsSource="{Binding Stages}" DisplayMemberPath="Name"/>
-        <ListBox x:Name="lineup" HorizontalAlignment="Left" Height="188" Margin="17,341,0,0" VerticalAlignment="Top" Width="190" ItemsSource="{Binding LineUps}" />
-        <ComboBox x:Name="CbBands" HorizontalAlignment="Left" Height="29" Margin="17,171,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Bands}" SelectedItem="{Binding GeselecteerdeBand}"/>
-        <Button Content="Add" HorizontalAlignment="Left" Height="24" Margin="17,534,0,0" VerticalAlignment="Top" Width="79"/>
-        <Button Content="Delete" HorizontalAlignment="Left" Height="24" Margin="121,534,0,0" VerticalAlignment="Top" Width="79"/>
-        <Button Content="Move" HorizontalAlignment="Left" Height="24" Margin="17,563,0,0" VerticalAlignment="Top" Width="79"/>
-        <Button Name="Addband" Content="AddBand" HorizontalAlignment="Left" Height="24" Margin="348,534,0,0" VerticalAlignment="Top" Width="75" Command="{Binding AddBandCommand}">
+        <ComboBox x:Name="cbstages" HorizontalAlignment="Left" Height="29" Margin="17,109,0,0" VerticalAlignment="Top" Width="190" ItemsSource="{Binding Stages}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedLineUp.Stage}" SelectedValuePath="ID" SelectedValue="{Binding SelectedLineUp.Stage.ID,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"/>
+        <ListBox x:Name="lineup" HorizontalAlignment="Left" Height="188" Margin="17,341,0,0" VerticalAlignment="Top" Width="361" ItemsSource="{Binding LineUps}" SelectedItem="{Binding SelectedLineUp}" />
+        <ComboBox x:Name="CbBands" HorizontalAlignment="Left" Height="29" Margin="17,171,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Bands}" SelectedItem="{Binding SelectedBand}" SelectedValuePath="ID" SelectedValue="{Binding SelectedBand.ID}"  />
+        <Button Content="Add" HorizontalAlignment="Left" Height="24" Margin="17,534,0,0" VerticalAlignment="Top" Width="79" Command="{Binding AddLineUpCommand}"/>
+        <Button Content="Delete" HorizontalAlignment="Left" Height="24" Margin="121,534,0,0" VerticalAlignment="Top" Width="79" Command="{Binding DeleteLineUpCommand}"/>
+        <Button Content="Move" HorizontalAlignment="Left" Height="24" Margin="17,563,0,0" VerticalAlignment="Top" Width="79" Command="{Binding EditLineUpCommand}"/>
+        <Button Name="Addband" Content="AddBand" HorizontalAlignment="Left" Height="24" Margin="514,534,0,0" VerticalAlignment="Top" Width="75" Command="{Binding AddBandCommand}">
             <Button.CommandParameter>
                 <MultiBinding Converter="{StaticResource MultiParamConverter}">
                     <Binding Path="Text" ElementName="txtNaam"/>
@@ -32,34 +34,34 @@
 
             </Button.CommandParameter>
         </Button>
-        <Button Content="Edit" HorizontalAlignment="Left" Height="24" Margin="250,534,0,0" VerticalAlignment="Top" Width="75" Command="{Binding EditBandCommand}"/>
-        <Label Content="Naam" HorizontalAlignment="Left" Height="24" Margin="250,27,0,0" VerticalAlignment="Top" Width="112"/>
-        <TextBox x:Name="txtNaam" HorizontalAlignment="Left" Height="21" Margin="250,56,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Name}" VerticalAlignment="Top" Width="173"/>
-        <Label Content="omschrijfing" HorizontalAlignment="Left" Height="27" Margin="250,82,0,0" VerticalAlignment="Top" Width="75"/>
-        <TextBox x:Name="TxtOmschrijf" HorizontalAlignment="Left" Height="86" Margin="250,114,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Description}" VerticalAlignment="Top" Width="173"/>
-        <Image x:Name="Picture" HorizontalAlignment="Left" Height="223" Margin="431,27,0,0" VerticalAlignment="Top" Width="159" Source="{Binding PicSource}" Stretch="Fill"/>
-        <Button Content="..." HorizontalAlignment="Left" Height="22" Margin="552,263,0,0" VerticalAlignment="Top" Width="21" Command="{Binding LoadPicture}"/>
-        <ComboBox x:Name="CBGenres" HorizontalAlignment="Left" Height="25" Margin="250,249,0,0" VerticalAlignment="Top" Width="173"  ItemsSource="{Binding Genres}" SelectedItem="{Binding SelectedGenreForBand}" DisplayMemberPath="Name"/>
-        <ListBox x:Name="listgenres" HorizontalAlignment="Left" Height="113" Margin="250,279,0,0" VerticalAlignment="Top" Width="173" ItemsSource="{Binding GeselecteerdeBand.Genres}" DisplayMemberPath="Name" SelectedItem="{Binding GeselecteerdeGenreInAddedGenres}" />
-        <Button Content="add" HorizontalAlignment="Left" Height="20" Margin="250,397,0,0" VerticalAlignment="Top" Width="75" Command="{Binding AddGenreCommand}" >
+        <Button Content="Edit" HorizontalAlignment="Left" Height="24" Margin="416,534,0,0" VerticalAlignment="Top" Width="75" Command="{Binding EditBandCommand}"/>
+        <Label Content="Naam" HorizontalAlignment="Left" Height="24" Margin="416,27,0,0" VerticalAlignment="Top" Width="112"/>
+        <TextBox x:Name="txtNaam" HorizontalAlignment="Left" Height="21" Margin="416,56,0,0" TextWrapping="Wrap" Text="{Binding SelectedBand.Name,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="173"/>
+        <Label Content="omschrijfing" HorizontalAlignment="Left" Height="27" Margin="416,82,0,0" VerticalAlignment="Top" Width="75"/>
+        <TextBox x:Name="TxtOmschrijf" HorizontalAlignment="Left" Height="86" Margin="416,114,0,0" TextWrapping="Wrap" Text="{Binding SelectedBand.Description,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="173"/>
+        <Image x:Name="Picture" HorizontalAlignment="Left" Height="223" Margin="231,43,0,0" VerticalAlignment="Top" Width="159" Source="{Binding PicSource,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" Stretch="Fill"/>
+        <Button Content="..." HorizontalAlignment="Left" Height="22" Margin="354,271,0,0" VerticalAlignment="Top" Width="36" Command="{Binding LoadPicture}"/>
+        <ComboBox x:Name="CBGenres" HorizontalAlignment="Left" Height="25" Margin="416,249,0,0" VerticalAlignment="Top" Width="173"  ItemsSource="{Binding Genres}" SelectedItem="{Binding SelectedGenreForBand}" DisplayMemberPath="Name"/>
+        <ListBox x:Name="listgenres" HorizontalAlignment="Left" Height="113" Margin="416,279,0,0" VerticalAlignment="Top" Width="173" ItemsSource="{Binding SelectedBand.Genres}" DisplayMemberPath="Name" SelectedItem="{Binding GeselecteerdeGenreInAddedGenres,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" />
+        <Button Content="add" HorizontalAlignment="Left" Height="20" Margin="416,397,0,0" VerticalAlignment="Top" Width="75" Command="{Binding AddGenreCommand}" >
             <Button.CommandParameter>
                 <Binding Path="SelectedItem" ElementName="CBGenres"/>
             </Button.CommandParameter>
         </Button>
-        <Button Content="delete" HorizontalAlignment="Left" Height="20" Margin="348,397,0,0" VerticalAlignment="Top" Width="75" Command="{Binding DeleteGenreCommand}"/>
-        <Label Content="Facebook:" HorizontalAlignment="Left" Height="25" Margin="250,422,0,0" VerticalAlignment="Top" Width="173"/>
-        <TextBox x:Name="txtFacebook" HorizontalAlignment="Left" Height="20" Margin="250,452,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Facebook}" VerticalAlignment="Top" Width="173"/>
-        <Label Content="Twitter" HorizontalAlignment="Left" Height="25" Margin="250,477,0,0" VerticalAlignment="Top" Width="133"/>
-        <TextBox x:Name="txtTwitter" HorizontalAlignment="Left" Height="22" Margin="250,502,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeBand.Twitter}" VerticalAlignment="Top" Width="173"/>
-        <ComboBox x:Name="cbDays" HorizontalAlignment="Left" Height="29" Margin="17,43,0,0" VerticalAlignment="Top" Width="190" ItemsSource="{Binding FestivalDays}" />
+        <Button Content="delete" HorizontalAlignment="Left" Height="20" Margin="514,397,0,0" VerticalAlignment="Top" Width="75" Command="{Binding DeleteGenreCommand}"/>
+        <Label Content="Facebook:" HorizontalAlignment="Left" Height="25" Margin="416,422,0,0" VerticalAlignment="Top" Width="173"/>
+        <TextBox x:Name="txtFacebook" HorizontalAlignment="Left" Height="20" Margin="416,452,0,0" TextWrapping="Wrap" Text="{Binding SelectedBand.Facebook,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="173"/>
+        <Label Content="Twitter" HorizontalAlignment="Left" Height="25" Margin="416,477,0,0" VerticalAlignment="Top" Width="133"/>
+        <TextBox x:Name="txtTwitter" HorizontalAlignment="Left" Height="22" Margin="416,502,0,0" TextWrapping="Wrap" Text="{Binding SelectedBand.Twitter,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="173"/>
+        <ComboBox x:Name="cbDays" HorizontalAlignment="Left" Height="29" Margin="17,43,0,0" VerticalAlignment="Top" Width="190" ItemsSource="{Binding FestivalDays}" SelectedItem="{Binding SelectedLineUp.Date}" SelectedValuePath="Date" SelectedValue="{Binding SelectedLineUp.Date,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}"/>
         <Label Content="Stages:" HorizontalAlignment="Left" Margin="17,78,0,0" VerticalAlignment="Top" Width="79"/>
         <Label Content="Dag:" HorizontalAlignment="Left" Height="27" Margin="19,16,0,0" VerticalAlignment="Top" Width="107"/>
         <Label x:Name="lblbands" Content="Bands:" HorizontalAlignment="Left" Height="23" Margin="19,143,0,0" VerticalAlignment="Top" Width="49"/>
         <Label Content="start tijd:" HorizontalAlignment="Left" Height="27" Margin="19,205,0,0" VerticalAlignment="Top" Width="107"/>
         <Label Content="eind tijd:" HorizontalAlignment="Left" Height="27" Margin="17,266,0,0" VerticalAlignment="Top" Width="107"/>
-        <ctrl:TimeControl Hours="24" Minutes="6" Seconds="0" x:Name="TimeControl"/>
-        <ComboBox x:Name="CbEindTijd" HorizontalAlignment="Left" Height="29" Margin="17,293,0,0" VerticalAlignment="Top" Width="192" ItemsSource="{Binding EindTijden}"/>
-        <Label Content="Genre:" HorizontalAlignment="Left" Height="26" Margin="250,218,0,0" VerticalAlignment="Top" Width="115"/>
+        <xctk:TimePicker TimeInterval="0:0:10:0" Height="22" Width="190" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="17,246,0,0" StartTime="00:00" EndTime="23:59" Value="{Binding SelectedLineUp.From}"/>
+        <Label Content="Genre:" HorizontalAlignment="Left" Height="26" Margin="416,218,0,0" VerticalAlignment="Top" Width="115"/>
+        <xctk:TimePicker TimeInterval="0:0:10:0" Height="22" Width="190" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="17,296,0,0" StartTime="00:00" EndTime="23:59" Value="{Binding SelectedLineUp.Till}"/>
 
     </Grid>
 </UserControl>

@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace project.Model
 {
-    class Band:ObservableObject
+    class Band : ObservableObject, IDataErrorInfo
     {
         private string _iD;
 
@@ -22,7 +24,8 @@ namespace project.Model
                 OnPropertyChanged("ID");
             }
         }
-
+        [Required]
+        
         private string _name;
 
         public string Name
@@ -58,7 +61,7 @@ namespace project.Model
             }
         }
         private string _facebook;
-
+        [Url]
         public string Facebook
         {
             get { return _facebook; }
@@ -69,7 +72,7 @@ namespace project.Model
             }
         }
         private string _twitter;
-
+        [Url]
         public string Twitter
         {
             get { return _twitter; }
@@ -80,7 +83,7 @@ namespace project.Model
             }
         }
         private ObservableCollection<Genre> _genres;
-
+        [Required]
         public ObservableCollection<Genre> Genres
         {
             get { return _genres; }
@@ -257,6 +260,31 @@ namespace project.Model
             return temp;
 
         }
-   
+
+
+        public string Error
+        {
+            get { return "verkeerde model"; }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                try
+                {
+                    object value = this.GetType().GetProperty(columnName).GetValue(this);
+                    Validator.ValidateProperty(value, new ValidationContext(this, null, null)
+                    {
+                        MemberName = columnName
+                    });
+                }
+                catch (ValidationException ex)
+                {
+                    return ex.Message;
+                }
+                return String.Empty;
+            }
+        }
     }
 }
