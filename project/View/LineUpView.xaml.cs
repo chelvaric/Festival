@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace project.View
 {
     /// <summary>
-    /// Interaction logic for LineUps.xaml
+    /// Interaction logic for LineUpView.xaml
     /// </summary>
-    public partial class LineUps : UserControl
+    public partial class LineUpView : UserControl
     {
-        public LineUps()
+        public LineUpView()
         {
             InitializeComponent();
         }
     }
-
 }

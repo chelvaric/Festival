@@ -26,6 +26,7 @@ namespace project.ViewModel
             
             _Pages.Add(new LineUpVM());
             _Pages.Add(new ContactVM());
+            _Pages.Add(new LineUpViewVM());
 
             //default pages
             _currentPage = Pages[0];

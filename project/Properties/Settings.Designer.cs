@@ -26,8 +26,7 @@ namespace project.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("server=localhost;User Id=root;password=1234;Persist Security Info=True;database=f" +
-            "estival")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=WOUTER\\SQLEXPRESS;Initial Catalog=Festival;Integrated Security=True")]
         public string ConnectionString {
             get {
                 return ((string)(this["ConnectionString"]));

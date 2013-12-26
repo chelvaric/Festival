@@ -18,7 +18,7 @@ namespace project.Model
 
          void Add(string name);
          void Edit(INameId temp);
-       
+         void Delete();
 
        
     }

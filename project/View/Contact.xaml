@@ -8,14 +8,14 @@
 xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
 
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="600">
+             d:DesignHeight="600" d:DesignWidth="600">
     <UserControl.Resources>
         <C:MultiBindingConvert x:Key="MultiParamConverter"></C:MultiBindingConvert>
         
     </UserControl.Resources>
     
     <Grid Margin="0,0,-165,-76" RenderTransformOrigin="0.402,0.559">
-        <ComboBox HorizontalAlignment="Left" Height="23" Margin="42,63,0,0" VerticalAlignment="Top" Width="229" ItemsSource="{Binding Types}" SelectedItem="GeselecteerdeMainType" DisplayMemberPath="Name">
+        <ComboBox HorizontalAlignment="Left" Height="23" Margin="42,38,0,0" VerticalAlignment="Top" Width="229" ItemsSource="{Binding Types}" SelectedItem="GeselecteerdeMainType" DisplayMemberPath="Name">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged" >
                     <cmd:EventToCommand Command="{Binding FilterCommand}"
@@ -23,13 +23,13 @@ xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ComboBox>
-        <ListBox HorizontalAlignment="Left" Height="155" Margin="42,100,0,0" VerticalAlignment="Top" Width="229" ItemsSource="{Binding Contacts}" SelectedItem="{Binding GeselecteerdeItem}" DisplayMemberPath="Name"/>
-        <Label Content="Zoek Contact Persoon" HorizontalAlignment="Left" Height="24" Margin="42,275,0,0" VerticalAlignment="Top" Width="146"/>
-        <TextBox x:Name="TxtSearch" HorizontalAlignment="Left" Height="18" Margin="42,304,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="229"/>
-        <Button Content="zoek" HorizontalAlignment="Left" Height="19" Margin="95,333,0,0" VerticalAlignment="Top" Width="76" Command="{Binding SearchCommand}" CommandParameter="{Binding  ElementName=TxtSearch,Path=Text}" />
-        <TextBox x:Name="TxtCity" HorizontalAlignment="Left" Height="24" Margin="335,97,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.City}" VerticalAlignment="Top" Width="179" />
-        <ComboBox x:Name="JobRole" HorizontalAlignment="Left" Height="22" Margin="337,242,0,0" VerticalAlignment="Top" Width="178" ItemsSource="{Binding Types}" SelectedItem="{ Binding GeselecteerdeItem.JobRole}" SelectedIndex="{Binding GeselecteerdeItem.JobRole.ID}" DisplayMemberPath="Name"/>
-        <Button Content="Add" HorizontalAlignment="Left" Height="19" Margin="335,278,0,0" VerticalAlignment="Top" Width="46" Command="{Binding AddCommand}">
+        <ListBox x:Name="LbCon" HorizontalAlignment="Left" Height="155" Margin="42,85,0,0" VerticalAlignment="Top" Width="512" ItemsSource="{Binding Contacts}" SelectedItem="{Binding GeselecteerdeItem}" DisplayMemberPath="Name"/>
+        <Label Content="Zoek Contact Persoon" HorizontalAlignment="Left" Height="24" Margin="325,9,0,0" VerticalAlignment="Top" Width="146"/>
+        <TextBox x:Name="TxtSearch" HorizontalAlignment="Left" Height="18" Margin="325,38,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="229"/>
+        <Button Content="zoek" HorizontalAlignment="Left" Height="19" Margin="325,61,0,0" VerticalAlignment="Top" Width="76" Command="{Binding SearchCommand}" CommandParameter="{Binding  ElementName=TxtSearch,Path=Text}" />
+        <TextBox x:Name="TxtCity" HorizontalAlignment="Left" Height="24" Margin="67,381,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.City,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="179" />
+        <ComboBox x:Name="JobRole" HorizontalAlignment="Left" Height="22" Margin="67,523,0,0" VerticalAlignment="Top" Width="178" ItemsSource="{Binding Types}" SelectedItem="{Binding GeselecteerdeItem.JobRole}" SelectedValuePath="ID" SelectedValue="{Binding GeselecteerdeItem.JobRole.ID}" DisplayMemberPath="Name"/>  
+        <Button Content="Add" HorizontalAlignment="Left" Height="19" Margin="390,526,0,0" VerticalAlignment="Top" Width="46" Command="{Binding AddCommand}">
             <Button.CommandParameter>
                 <MultiBinding Converter="{StaticResource MultiParamConverter}">
                     <Binding Path="Text" ElementName="TxtName"/>
@@ -44,12 +44,19 @@ xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.
                 
             </Button.CommandParameter>
         </Button>
-        <Button Content="Edit" HorizontalAlignment="Left" Height="19" Margin="398,278,0,0" VerticalAlignment="Top" Width="46" Command="{Binding EditCommand}"/>
-        <Button Content="Delete" HorizontalAlignment="Left" Height="19" Margin="468,278,0,0" VerticalAlignment="Top" Width="46" Command="{Binding DeleteCommand}"/>
-        <TextBox x:Name="TxtName" HorizontalAlignment="Left" Height="24" Margin="335,68,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.Name}" VerticalAlignment="Top" Width="179"/>
-        <TextBox x:Name="TxtPhone" HorizontalAlignment="Left" Height="24" Margin="335,126,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.Phone}" VerticalAlignment="Top" Width="179"/>
-        <TextBox x:Name="TxtCellPhone" HorizontalAlignment="Left" Height="24" Margin="335,155,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.CellPhone}" VerticalAlignment="Top" Width="179"/>
-        <TextBox x:Name="TxtEmail" HorizontalAlignment="Left" Height="24" Margin="336,184,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.Email}" VerticalAlignment="Top" Width="179"/>
-        <TextBox x:Name="TxtCompany" HorizontalAlignment="Left" Height="24" Margin="336,213,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.Company}" VerticalAlignment="Top" Width="179"/>
+        <Button Content="Edit" HorizontalAlignment="Left" Height="19" Margin="453,526,0,0" VerticalAlignment="Top" Width="46" Command="{Binding EditCommand}"/>
+        <Button Content="Delete" HorizontalAlignment="Left" Height="19" Margin="523,526,0,0" VerticalAlignment="Top" Width="46" Command="{Binding DeleteCommand}"/>
+        <TextBox x:Name="TxtName" HorizontalAlignment="Left" Height="24" Margin="66,298,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.Name,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="179"/>
+        <TextBox x:Name="TxtPhone" HorizontalAlignment="Left" Height="24" Margin="392,381,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.Phone,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="179"/>
+        <TextBox x:Name="TxtCellPhone" HorizontalAlignment="Left" Height="24" Margin="392,447,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.CellPhone,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="179"/>
+        <TextBox x:Name="TxtEmail" HorizontalAlignment="Left" Height="24" Margin="66,447,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.Email,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="179"/>
+        <TextBox x:Name="TxtCompany" HorizontalAlignment="Left" Height="24" Margin="390,298,0,0" TextWrapping="Wrap" Text="{Binding GeselecteerdeItem.Company,ValidatesOnDataErrors=True,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="179"/>
+        <Label Content="Name" HorizontalAlignment="Left" Height="33" Margin="66,260,0,0" VerticalAlignment="Top" Width="127"/>
+        <Label Content="City&#xD;&#xA;" HorizontalAlignment="Left" Height="33" Margin="66,343,0,0" VerticalAlignment="Top" Width="127" RenderTransformOrigin="0.482,3.139"/>
+        <Label Content="Email&#xD;&#xA;" HorizontalAlignment="Left" Height="33" Margin="66,414,0,0" VerticalAlignment="Top" Width="127" RenderTransformOrigin="0.482,3.139"/>
+        <Label Content="Phone&#xD;&#xA;" HorizontalAlignment="Left" Height="33" Margin="390,343,0,0" VerticalAlignment="Top" Width="127" RenderTransformOrigin="0.482,3.139"/>
+        <Label Content="Comapny&#xD;&#xA;" HorizontalAlignment="Left" Height="33" Margin="390,260,0,0" VerticalAlignment="Top" Width="127" RenderTransformOrigin="0.482,3.139"/>
+        <Label Content="CellPhone&#xD;&#xA;" HorizontalAlignment="Left" Height="33" Margin="390,414,0,0" VerticalAlignment="Top" Width="127" RenderTransformOrigin="0.482,3.139"/>
+        <Label Content="Contact Type" HorizontalAlignment="Left" Height="33" Margin="67,485,0,0" VerticalAlignment="Top" Width="127" RenderTransformOrigin="0.482,3.139"/>
     </Grid>
 </UserControl>

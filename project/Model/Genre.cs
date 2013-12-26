@@ -38,7 +38,7 @@ namespace project.Model
         public static ObservableCollection<INameId> Waardes()
          {
              ObservableCollection<INameId> lijst = new ObservableCollection<INameId>();
-             string sql = "SELECT * FROM Festival.Genres";
+             string sql = "SELECT * FROM Genres";
              DbDataReader reader = DataBase.GetData(sql);
              while (reader.Read())
              {
@@ -53,16 +53,13 @@ namespace project.Model
          }
         public void Add(string name)
         {
-            string sql = "INSERT INTO Festival.Genres (name)  VALUES(@name)";
+            string sql = "INSERT INTO Genres (name)  VALUES(@name)";
             DbParameter par = DataBase.AddParameter("@name", name);
             DataBase.ModifyData(sql, par);
             
         
         }
-        public void Delete()
-        { 
-         
-        }
+      
         public void Edit(INameId temp)
         {
             string sql = "UPDATE genres SET name= @name WHERE ID = @ID";
@@ -70,6 +67,13 @@ namespace project.Model
             DbParameter ID = DataBase.AddParameter("@ID", temp.ID);
             DataBase.ModifyData(sql, Name, ID);
         
+        }
+        public void Delete()
+        {
+            string sql = "DELETE FROM genres WHERE  ID = @ID";
+
+            DbParameter ID = DataBase.AddParameter("@ID", this.ID);
+            DataBase.ModifyData(sql, ID);
         }
     }
 }

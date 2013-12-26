@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
@@ -10,7 +12,7 @@ using System.Xml;
 
 namespace project.Model
 {
-    class Contactperson : ObservableObject
+    class Contactperson : ObservableObject, IDataErrorInfo
     {
         private string _iD;
 
@@ -22,7 +24,7 @@ namespace project.Model
             }
         }
         private string _name;
-
+        [Required(ErrorMessage="Moet een Naam Hebben")]
         public string Name
         {
             get { return _name; }
@@ -32,14 +34,15 @@ namespace project.Model
             }
         }
         private string _company;
-
+        [MaxLength(50)]
         public string Company
         {
             get { return  _company; }
             set {  _company = value; }
         }
-        private ContactPersonType _jobRole;
 
+        private ContactPersonType _jobRole;
+        [Required(ErrorMessage="moet een type hebben")]
         public ContactPersonType JobRole
         {
             get { return _jobRole; }
@@ -47,21 +50,21 @@ namespace project.Model
         }
 
         private string _city;
-
+        [MaxLength(50)]
         public string City
         {
             get { return _city; }
             set { _city = value; }
         }
         private string _phone;
-
+        [Phone]
         public string Phone
         {
             get { return _phone; }
             set { _phone = value; }
         }
         private string _cellPhone;
-
+        [Phone]
         public string CellPhone
         {
             get { return _cellPhone; }
@@ -69,7 +72,7 @@ namespace project.Model
         }
 
         private string _email;
-
+        [EmailAddress]
         public string Email
         {
             get { return  _email; }
@@ -134,7 +137,7 @@ namespace project.Model
             while (reader.Read())
             {
                 MakeContact(reader, temp);
-            
+                temp.JobRole = ContactPersonType.search(reader["JobRoleID"].ToString());
             }
             return temp;
         }
@@ -149,23 +152,48 @@ namespace project.Model
             {
                 Contactperson temp = new Contactperson();
                 MakeContact(reader, temp);
-                templijst.Add(temp); 
-
+                templijst.Add(temp);
+                temp.JobRole = ContactPersonType.search(reader["JobRoleID"].ToString());
             }
             return templijst;
         }
         public static void Edit(Contactperson person)
         {
-            string sql = "UPDATE festival.contactpersons SET  Name = @Name, City = @City, Phone = @Phone, CellPhone = @CellPhone, Company = @Company, JobRoleID = @JobRoleId WHERE ID = @ID";
+            string sql = "UPDATE contactpersons SET  Name = @Name, City = @City, Phone = @Phone, CellPhone = @CellPhone, Company = @Company, JobRoleID = @JobRoleId WHERE ID = @ID";
             AddParams(person,sql,int.Parse(person.ID));
         
         }
         public static void Delete(string id)
         {
-            string sql = "DELETE FROM festival.contactpersons WHERE ID = @ID ";
+            string sql = "DELETE FROM contactpersons WHERE ID = @ID ";
             DbParameter Id = DataBase.AddParameter("@ID", id);
             DataBase.ModifyData(sql, Id);
         }
-        
+
+
+        public string Error
+        {
+            get { return "Bad Model"; }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                try
+                {
+                    object value = this.GetType().GetProperty(columnName).GetValue(this);
+                    Validator.ValidateProperty(value, new ValidationContext(this, null, null)
+                    {
+                        MemberName = columnName
+                    });
+                }
+                catch (ValidationException ex)
+                {
+                    return ex.Message;
+                }
+                return String.Empty;
+            }
+        }
     }
 }

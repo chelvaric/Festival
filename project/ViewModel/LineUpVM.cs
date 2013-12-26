@@ -85,18 +85,7 @@ namespace project.ViewModel
         {
             DateTime uur = new DateTime();
             ObservableCollection<DateTime> startTijd = new ObservableCollection<DateTime>();
-            for ( ;uur.Hour < 24; uur.AddHours(1))
-            {
-                for (; uur.Minute < 60; uur.AddMinutes(10))
-                {
-
-                    startTijd.Add(uur);
-
-
-
-                }
-            
-            }
+           
             return startTijd;
         
         }
@@ -220,10 +209,10 @@ namespace project.ViewModel
         }
         public void InsertBand(object[] param)
         {
-            string pic = null;
-            string descrp = null;
-            string facebook = null;
-              string twitter = null;
+            string pic = "";
+            string descrp = "";
+            string facebook = "";
+              string twitter = "";
             string name = param[0].ToString();
             if (param[1] != null)
            
@@ -310,8 +299,8 @@ namespace project.ViewModel
 
         public ObservableCollection<LineUp> LineUps
         {
-            get {
-                _lineup = LineUp.GeefWaardes();
+            get {   
+                //_lineup = LineUp.GetLineUps();
                 return _lineup; }
             set { _lineup = value; }
         }

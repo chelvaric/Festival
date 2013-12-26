@@ -127,7 +127,7 @@ namespace project.Model
             foreach (Band item in lijst)
             {
                 ObservableCollection<Genre> tempLijst = new ObservableCollection<Genre>();
-                string sql = "SELECT bands_genres.*,genres.ID as GenreID,genres.name as GenreName FROM festival.bands_genres INNER JOIN festival.genres ON bands_genres.GenreID = genres.ID WHERE BandID = @BandID ";
+                string sql = "SELECT bands_genres.*,genres.ID as GenreID,genres.name as GenreName FROM bands_genres INNER JOIN genres ON bands_genres.GenreID = genres.ID WHERE BandID = @BandID ";
                 DbParameter par = DataBase.AddParameter("@BandID",item.ID);
                     DbDataReader reader = DataBase.GetData(sql,par);
                     if (reader != null)
@@ -159,14 +159,14 @@ namespace project.Model
             ParamsMaken(name, pic, descrp, facebook, twitter, sql);
            ObservableCollection<Band> temp =  Bands();
          int BandID  = temp.Count();
-         DbTransaction trans = DataBase.BeginTransaction();
+         
          foreach (Genre genre in genreID)
          {
              
              sql = "INSERT INTO bands_genres(BandID,GenreID) VALUES(@BandID,@GenreID)";
              DbParameter parid = DataBase.AddParameter("@BandID", BandID);
              DbParameter pargenreid = DataBase.AddParameter("@GenreID", genre.ID);
-             DataBase.ModifyData(trans, sql, parid, pargenreid);
+             DataBase.ModifyData( sql, parid, pargenreid);
          }
         }
 
@@ -185,12 +185,12 @@ namespace project.Model
         {
             string sql; 
             
-            DbTransaction trans = DataBase.BeginTransaction();
+            
             
                     sql = "DELETE FROM bands_genres WHERE BandID = @BandID ";
                     DbParameter parid = DataBase.AddParameter("@BandID", editBand.ID);
                   
-                    DataBase.ModifyData(trans, sql, parid);
+                    DataBase.ModifyData( sql, parid);
 
 
                     foreach (Genre genre in editBand.Genres)
@@ -199,13 +199,63 @@ namespace project.Model
                         sql = "INSERT INTO bands_genres(BandID,GenreID) VALUES(@BandID,@GenreID)";
                          parid = DataBase.AddParameter("@BandID", editBand.ID);
                         DbParameter pargenreid = DataBase.AddParameter("@GenreID", genre.ID);
-                        DataBase.ModifyData(trans, sql, parid, pargenreid);
+                        DataBase.ModifyData( sql, parid, pargenreid);
                     }
         
             sql = "UPDATE bands SET Name = @Name, Picture = @Picture, Description = @Description,Facebook = @Facebook, Twitter=@Twitter Where ID = @BandID   ";
             ParamsMaken(editBand.Name, editBand.Picture, editBand.Description, editBand.Facebook, editBand.Twitter,sql,editBand.ID);
        
             
+        }
+
+        private static void AddGenre(Band item)
+        {
+            ObservableCollection<Genre> tempLijst = new ObservableCollection<Genre>();
+            string sql = "SELECT bands_genres.*,genres.ID as GenreID,genres.name as GenreName FROM bands_genres INNER JOIN genres ON bands_genres.GenreID = genres.ID WHERE BandID = @BandID ";
+            DbParameter par = DataBase.AddParameter("@BandID", item.ID);
+            DbDataReader reader = DataBase.GetData(sql, par);
+            if (reader != null)
+            {
+
+                while (reader.Read())
+                {
+
+
+                    Genre temp = new Genre();
+                    temp.ID = reader["GenreID"].ToString();
+                    temp.Name = reader["GenreName"].ToString();
+                    tempLijst.Add(temp);
+
+                }
+                if (reader != null)
+                    reader.Close();
+                item.Genres = tempLijst;
+
+            }
+        }
+        public static Band BandByID(int id)
+        {
+
+            Band temp = new Band();
+            string sql = "SELECT * FROM Bands WHERE ID = @ID";
+            DbParameter par = DataBase.AddParameter("@ID", id);
+            DbDataReader Reader = DataBase.GetData(sql, par);
+            while (Reader.Read())
+            {
+
+                temp.ID = Reader["ID"].ToString();
+                temp.Name = Reader["Name"].ToString();
+                temp.Description = Reader["Description"].ToString();
+                temp.Facebook = Reader["Facebook"].ToString();
+                temp.Picture = Reader["Picture"].ToString();
+                temp.Twitter = Reader["Twitter"].ToString();
+
+            }
+            if (Reader != null)
+                Reader.Close();
+            AddGenre(temp);
+            return temp;
+
         }
    
     }

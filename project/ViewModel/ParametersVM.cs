@@ -24,9 +24,9 @@ namespace project.ViewModel
         public ParametersVM()
         {
             _datums = Festival.HaalDatum();
-            _stages = Stage.Waardes();
-            _Genres = Genre.Waardes();
-            _ContactTypes = ContactPersonType.Waardes();
+         
+        
+           
             CreateSaveCommand();
             CreateEditCommand();
             CreateDatumEditCommand();
@@ -97,7 +97,7 @@ namespace project.ViewModel
 
         public ObservableCollection<INameId> Stages
         {
-            get { return _stages; }
+            get { _stages = Stage.Waardes();  return _stages; }
             set { _stages = value; }
         }
 
@@ -107,15 +107,15 @@ namespace project.ViewModel
 
         public ObservableCollection<INameId> Genres
         {
-            get { return _Genres; }
+            get { _Genres = Genre.Waardes(); return _Genres; }
             set { _Genres = value; }
         }
         private ObservableCollection<INameId> _ContactTypes;
 
         public ObservableCollection<INameId> ContactTypes
         {
-            get { return _ContactTypes; }
-            set { _ContactTypes = value; }
+            get { _ContactTypes = ContactPersonType.Waardes();  return _ContactTypes; }
+            set { _ContactTypes = value; OnPropertyChanged("ContactTypes"); }
         }
 
         public ICommand SaveCommand
@@ -126,10 +126,13 @@ namespace project.ViewModel
 
         private bool CanExecuteSaveCommand(object parameter)
         {
-            if (GeselecteerdeInstelling != null)
+            if (GeselecteerdeInstelling != null )
             {
-                return true;
-
+                if (parameter.ToString() != "")
+                {
+                    return true;
+                }
+                else { return false; }
             }
             else
             {
@@ -192,7 +195,11 @@ namespace project.ViewModel
         }
         private bool CanExecuteDatumEditCommand()
         {
-            return true;
+            if (Datums.StartDate < Datums.EndDate)
+            {
+                return true;
+            }
+            else { return false;     }
         }
         private void CreateDatumEditCommand()
         {
@@ -204,5 +211,32 @@ namespace project.ViewModel
             Festival.Edit(Datums);
         
         }
+
+        public ICommand DeleteCommand
+        {
+            get { return new RelayCommand(Delete,CanDelete); }
+
+        }
+        public void Delete()
+        {
+
+            GeselecteerdeItem.Delete();
+            ObservableCollection<INameId> temp = GeselecteerdeInstelling;
+            OnPropertyChanged("Instellingen");
+            GeselecteerdeInstelling = temp;
+            OnPropertyChanged("GeselecteerdeInstelling");
+        }
+        public bool CanDelete()
+            {
+                if (GeselecteerdeItem != null)
+                { return true; }
+                else
+                {
+                    return false;
+                
+                }
+            
+            }
+
     }
 }

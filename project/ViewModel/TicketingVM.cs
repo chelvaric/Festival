@@ -26,13 +26,19 @@ namespace project.ViewModel
             get { return _geselecteerdeTicketType; }
             set { _geselecteerdeTicketType = value; OnPropertyChanged("GeselecteerdeTicketType"); }
         }
-        
+        private Ticket _geselecteerdeTicket;
+
+        public Ticket GeselecteerdeTicket
+        {
+            get { return _geselecteerdeTicket; }
+            set { _geselecteerdeTicket = value; OnPropertyChanged("GeselecteerdeTicket"); }
+        }
         public TicketingVM()
         {
             //haal de data op vanuit de model
             _tickets = Ticket.Waardes();
             _tickettypes = TicketType.GetWaardes();
-
+            GeselecteerdeTicketType = _tickettypes[0];
             //maak de commands aan voor de buttons
             CreateSearchCommand();
             CreateCreateCommand();
@@ -43,16 +49,31 @@ namespace project.ViewModel
 
         public ObservableCollection<Ticket> Tickets
         {
-            get { return _tickets; }
+            get { _tickets = Ticket.Waardes(); return _tickets; }
             set { _tickets = value; }
         }
         private ObservableCollection<TicketType> _tickettypes;
 
         public ObservableCollection<TicketType> TicketTypes
         {
-            get { return _tickettypes; }
+            get { _tickettypes = TicketType.GetWaardes(); return _tickettypes; }
             set { _tickettypes = value; }
         }
+
+
+        public ICommand EditCommand
+        {
+            get { return new RelayCommand(Edit, GeselecteerdeTicketType.IsValid); }
+        
+        }
+     
+        
+        
+        public void Edit()
+        {
+            TicketType.Edit(GeselecteerdeTicketType);
+        }
+
 
         public ICommand SearchCommand
         {
@@ -119,7 +140,7 @@ namespace project.ViewModel
         {
             if (param != null)
             {
-                if (param[0] != null && param[1] != "naam")
+                if (param[0] != null && param[1].ToString() != "naam")
                 {
                     return true;
                 }
@@ -145,12 +166,53 @@ namespace project.ViewModel
             private void ExecuteReserveerCommand(object[] param){
 
                 Ticket.Add(param[0].ToString(), param[1].ToString(), int.Parse(param[2].ToString()), (TicketType)param[3]);
-                Tickets = Ticket.Waardes();
+
                 OnPropertyChanged("Tickets");
+                OnPropertyChanged("TicketTypes");
                
                
             }
-      
+
+            public ICommand DeleteTypeCommand
+            {
+                get { return new RelayCommand(DeleteType, CanDeleteType); }
+            
+            }
+            public void DeleteType()
+            {
+                GeselecteerdeTicketType.delete();
+                OnPropertyChanged(" GeselecteerdeTicketType");
+            
+            }
+            public bool CanDeleteType()
+            {
+
+                if (GeselecteerdeTicketType != null)
+                { return true; }
+                else { return false; }
+            
+            }
+            public ICommand DeleteTicketCommand
+            {
+                get { return new RelayCommand(DeleteTicket, CanDeleteTicket); }
+
+            }
+            public void DeleteTicket()
+            {
+                GeselecteerdeTicket.Delete();
+                OnPropertyChanged("Tickets");
+
+            }
+            public bool CanDeleteTicket()
+            {
+
+                if (GeselecteerdeTicket != null)
+                { return true; }
+                else { return false; }
+
+            }
+
+           
     }
 }
   

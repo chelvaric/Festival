@@ -6,10 +6,12 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace project.Model
 {
-    class TicketType : ObservableObject
+    class TicketType : ObservableObject, IDataErrorInfo
     {
         private string _iD;
 
@@ -23,7 +25,7 @@ namespace project.Model
         }
 
         private string _name;
-
+        [Required(ErrorMessage="moet ingevuld zijn")]
         public string Name
         {
             get { return _name; }
@@ -33,7 +35,7 @@ namespace project.Model
         }
 
         private Double _price;
-
+        [Range(0,Double.MaxValue,ErrorMessage="Moet posetief zijn")]
         public Double Price
         {
             get { return _price; }
@@ -43,7 +45,7 @@ namespace project.Model
         }
 
         private int _avaibleTickets;
-
+         [Range(0, int.MaxValue, ErrorMessage = "minstens 1 ticket zijn")]
         public int AvaibleTickets
         {
             get { return _avaibleTickets; }
@@ -71,12 +73,12 @@ namespace project.Model
             
             return lijst;
         }
-        public static TicketType Search(string id, DbTransaction tran)
+        public static TicketType Search(string id)
         {
             string sql = "SELECT * FROM tickettypes WHERE ID = @ID";
             DbParameter iD = DataBase.AddParameter("@ID", id);
            
-            DbDataReader Reader = DataBase.GetData(tran,sql, iD);
+            DbDataReader Reader = DataBase.GetData(sql, iD);
             TicketType temp = new TicketType();
             while (Reader.Read())
             {
@@ -116,6 +118,45 @@ namespace project.Model
             modify(temp, sql,ID);
         
         }
+        public void delete()
+        {
+            string sql = "DELETE FROM tickettypes  WHERE ID = @id";
+            DbParameter parID = DataBase.AddParameter("@ID", this.ID);
+            DataBase.ModifyData(sql, parID);
         
+        
+        }
+        public bool IsValid()
+        {
+            return Validator.TryValidateObject(this, new ValidationContext(this, null, null),
+           null, true);
+        }
+        public string this[string columnName]
+        {
+            get
+            {
+                try
+                {
+                    object value = this.GetType().GetProperty(columnName).GetValue(this);
+                    Validator.ValidateProperty(value, new ValidationContext(this, null, null)
+                    {
+                        MemberName = columnName
+                    });
+                }
+                catch (ValidationException ex)
+                {
+                    return ex.Message;
+                }
+                return String.Empty;
+            }
+
+        }
+
+
+
+        public string Error
+        {
+            get { return "model not valid"; }
+        }
     }
 }

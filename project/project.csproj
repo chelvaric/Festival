@@ -47,6 +47,7 @@
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Laurent Bugnion (GalaSoft)\Mvvm Light Toolkit\Binaries\WPF45\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -84,6 +85,7 @@
     <Compile Include="ViewModel\ApplicationVm.cs" />
     <Compile Include="ViewModel\ContactVM.cs" />
     <Compile Include="ViewModel\converters\MultiBindingConvert.cs" />
+    <Compile Include="ViewModel\LineUpViewVM.cs" />
     <Compile Include="ViewModel\LineUpVM.cs" />
     <Compile Include="ViewModel\ParametersVM.cs" />
     <Compile Include="ViewModel\TicketingVM.cs" />
@@ -92,17 +94,27 @@
     <Compile Include="View\LineUps.xaml.cs">
       <DependentUpon>LineUps.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\LineUpView.xaml.cs">
+      <DependentUpon>LineUpView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Parameters.xaml.cs">
       <DependentUpon>Parameters.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Ticketing.xaml.cs">
       <DependentUpon>Ticketing.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\TimeControl.xaml.cs">
+      <DependentUpon>TimeControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="View\Contact.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\LineUps.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LineUpView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -126,6 +138,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Ticketing.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TimeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -155,7 +171,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="View\Converters\" />

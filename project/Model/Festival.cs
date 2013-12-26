@@ -48,18 +48,21 @@ namespace project.Model
 
         public static Festival HaalDatum()
         {
-            Festival lijst;
+            
             string sql = "SELECT * FROM festivalgeneral";
             DbDataReader Reader = DataBase.GetData(sql);
-            Reader.Read();
-          lijst = new Festival() { StartDate = (DateTime)Reader["StartDate"],EndDate = (DateTime)Reader["EndDate"]};
-          lijst.FestivalDays = new ObservableCollection<DateTime>();
-          for (var dt = lijst.StartDate; dt <= lijst.EndDate; dt = dt.AddDays(1))
-          {
-              lijst.FestivalDays.Add(dt);
-          }   
-                
-             
+            Festival lijst = new Festival();
+            while(Reader.Read())
+            {
+                lijst._startDate =  (DateTime)Reader["StartDate"];
+                lijst.EndDate = (DateTime)Reader["EndDate"];
+                lijst.FestivalDays = new ObservableCollection<DateTime>();
+                for (var dt = lijst.StartDate; dt <= lijst.EndDate; dt = dt.AddDays(1))
+                {
+                    lijst.FestivalDays.Add(dt);
+                }
+
+            }
             
             return lijst;
         }

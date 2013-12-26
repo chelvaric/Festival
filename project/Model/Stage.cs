@@ -25,7 +25,7 @@ namespace project.Model
             set
             {
                 _id = value;
-                OnPropertyChanged("ID");
+             
             }
         }
       
@@ -51,7 +51,7 @@ namespace project.Model
        public static ObservableCollection<INameId> Waardes()
        {
            ObservableCollection<INameId> lijst = new ObservableCollection<INameId>();
-           string sql = "SELECT * FROM Festival.Stages";
+           string sql = "SELECT * FROM Stages";
            DbDataReader reader = DataBase.GetData(sql);
            while (reader.Read())
            {
@@ -66,14 +66,13 @@ namespace project.Model
 
        public void Add(string name)
        {
-           string sql = "INSERT INTO Festival.Stages (Name)  VALUES(@name)";
+           string sql = "INSERT INTO Stages (Name)  VALUES(@name)";
            DbParameter par = DataBase.AddParameter("@name", name);
            DataBase.ModifyData(sql, par);
 
 
        }
-       public void Delete()
-       { }
+   
        public void Edit(INameId temp)
        {
            string sql = "UPDATE stages SET Name= @name WHERE ID = @ID";
@@ -81,6 +80,33 @@ namespace project.Model
            DbParameter ID = DataBase.AddParameter("@ID", temp.ID);
            DataBase.ModifyData(sql, Name, ID);
        }
+   
+            public void Delete()
+        {
+            string sql = "DELETE FROM stages WHERE  ID = @ID";
+
+            DbParameter ID = DataBase.AddParameter("@ID", this.ID);
+            DataBase.ModifyData(sql, ID);
+        }
+
+            public static Stage GetbyID(int id)
+            {
+                ObservableCollection<Stage> lijst = new ObservableCollection<Stage>();
+                string sql = "SELECT * FROM Stages WHERE ID = @ID";
+                DbParameter par = DataBase.AddParameter("@ID", id);
+                DbDataReader reader = DataBase.GetData(sql, par);
+                Stage stage = null;
+                while (reader.Read())
+                {
+
+
+                    stage = new Stage() { Name = reader["name"].ToString(), ID = reader["ID"].ToString() };
+
+                }
+                if (reader != null)
+                    reader.Close();
+                return stage;
+            }
 
     }
      

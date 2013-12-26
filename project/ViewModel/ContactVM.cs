@@ -53,28 +53,34 @@ namespace project.ViewModel
             set
             {
                 _geselecteerdeItem = value;
-             
+                //if (GeselecteerdeItem != null)
+                //{
 
+                //    for (int i = 0; i < Types.Count; i++)
+                //    {
+                //        if (Types[i].Name == _geselecteerdeItem.JobRole.Name)
+                //        {
+                //            GeselecteerdeIndex = int.Parse(Types[i].ID);
+                //        }
+                //    }
+
+                //}
                 //alle controls die hier aan gelinkt zijn worden geupdate
                 OnPropertyChanged("GeselecteerdeItem");
              
                
             }
         }
-        //private ContactPersonType _geselecteerdeType;
 
-        //public ContactPersonType GeselecteerdeType
-        //{
-        //    get { return _geselecteerdeType; }
-        //    set
-        //    {
-        //        _geselecteerdeType = value;
+        private int _geselecteerdeIndex;
 
+        public int GeselecteerdeIndex
+        {
+            get { return _geselecteerdeIndex; }
+            set { _geselecteerdeIndex = value; OnPropertyChanged("GeselecteerdeIndex"); }
+        }
+        
 
-        //        //alle controls die hier aan gelinkt zijn worden geupdate
-        //        OnPropertyChanged("GeselecteerdeType");
-        //    }
-        //}
         private ContactPersonType _geselecteerdeMainType;
 
         public ContactPersonType GeselecteerdeMainType
