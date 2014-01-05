@@ -26,7 +26,7 @@ namespace project.ViewModel
       
         public ObservableCollection<LineUp> LineUps
         {
-            get { _lineUps = LineUp.GetLineUps();  return _lineUps; }
+            get {   return _lineUps; }
             set { _lineUps = value; OnPropertyChanged("LineUps"); }
         }
 
@@ -94,6 +94,7 @@ namespace project.ViewModel
             {
                 if (GeselecteerdeStage != null)
                 {
+                    LineUps.Clear();
                     LineUps = LineUp.GetLineUpsByStage("sorteer op Stage", "", GeselecteerdeDatum, GeselecteerdeStage);
                 }
             

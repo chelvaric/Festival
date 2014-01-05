@@ -110,7 +110,7 @@ namespace project.Model
                 if (date == "sorteer op Dag")
                 {
 
-                    sql = "SELECT * FROM Festival.dbo.lineup WHERE  Date =  @Date";
+                    sql = "SELECT * FROM lineup WHERE  Date =  @Date";
     
 
 
@@ -124,7 +124,7 @@ namespace project.Model
                     if (id == "sorteer op Stage")
                     {
 
-                        sql = "SELECT * FROM Festival.dbo.lineup WHERE StageID =  @StageID ";
+                        sql = "SELECT * FROM lineup WHERE StageID =  @StageID ";
                         par = DataBase.AddParameter("@StageID", stage.ID);
 
                         data = DataBase.GetData(sql, par);

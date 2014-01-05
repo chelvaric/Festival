@@ -103,16 +103,15 @@ namespace project.ViewModel
         }
         public bool CanxecuteAddCommand(object[] param)
         {
-            if (param != null )
+            if (GeselecteerdeItem != null)
             {
-                if (param[0].ToString() != "")
-                {
-                    return true;
-                }
-                else return false;
-
+                return GeselecteerdeItem.IsValid();
             }
-            else { return false; }
+            else
+            {
+
+                return false;
+            }
         
         
         }
@@ -137,12 +136,15 @@ namespace project.ViewModel
 
         public bool CanxecuteEditCommand()
         {
-            if ( GeselecteerdeItem != null)
+            if (GeselecteerdeItem != null)
             {
-                return true;
-
+                return GeselecteerdeItem.IsValid();
             }
-            else { return false; }
+            else
+            {
+
+                return false;
+            }
 
 
         }

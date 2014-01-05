@@ -335,7 +335,17 @@ namespace project.Model
         }
 
         public void DeleteBand(int id)
-        { 
+        {
+            string sql = "DELETE FROM bands WHERE ID = @ID";
+            DbParameter parID = DataBase.AddParameter("@ID", id);
+            DataBase.ModifyData(sql, parID);
+            DelteGenres(id);
+        }
+        public void DelteGenres(int id)
+        {
+            string sql = "DELETE FROM bands_genres WHERE BandID = @ID";
+            DbParameter parID = DataBase.AddParameter("@ID", id);
+            DataBase.ModifyData(sql, parID);
         
         }
     }

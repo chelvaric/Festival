@@ -181,7 +181,7 @@ namespace project.ViewModel
         {
             if (SelectedBand != null)
             {
-                if (SelectedBand.Name != null)
+                if (SelectedBand.Name != null && SelectedBand.Genres != null)
                 {
 
                     return true;
@@ -466,8 +466,9 @@ namespace project.ViewModel
              }
 
              public void DeleteBand()
-             { 
-                //doe iets
+             {
+                 SelectedBand.DeleteBand(int.Parse(SelectedBand.ID));
+                 OnPropertyChanged("Bands");
              }
 
              public bool CanDeleteBand()

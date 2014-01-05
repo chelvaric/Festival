@@ -58,6 +58,7 @@ namespace project.Model
         }
         private string _phone;
         [Phone]
+        [MaxLength(10)]
         public string Phone
         {
             get { return _phone; }
@@ -65,6 +66,7 @@ namespace project.Model
         }
         private string _cellPhone;
         [Phone]
+        [MaxLength(10)]
         public string CellPhone
         {
             get { return _cellPhone; }
@@ -73,6 +75,7 @@ namespace project.Model
 
         private string _email;
         [EmailAddress]
+        [MaxLength(50)]
         public string Email
         {
             get { return  _email; }
@@ -232,6 +235,12 @@ namespace project.Model
                 }
                 return String.Empty;
             }
+        }
+
+        public bool IsValid()
+        {
+            return Validator.TryValidateObject(this, new ValidationContext(this, null, null),
+           null, true);
         }
     }
 }
