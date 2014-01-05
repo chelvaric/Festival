@@ -23,6 +23,7 @@ namespace project.ViewModel
         {
             _contacts = Contactperson.GeefLijst();
             _types = ContactPersonType.Waardes();
+            GeselecteerdeItem = new Contactperson();
             CreateAddCommand();
             CreateEditCommand();
             CreateDeleteCommand();
@@ -241,11 +242,18 @@ namespace project.ViewModel
         }
         public void ExecuteFilterCommand(SelectionChangedEventArgs par)
         {
-            _contacts.Clear();
-            ContactPersonType temp = (ContactPersonType)par.AddedItems[0];
+            try
+            {
+                _contacts.Clear();
+                ContactPersonType temp = (ContactPersonType)par.AddedItems[0];
 
-            _contacts = Contactperson.SearchByType(temp.ID);
-            OnPropertyChanged("Contacts");
+                _contacts = Contactperson.SearchByType(temp.ID);
+                OnPropertyChanged("Contacts");
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+            }
 
         }
         public void CreateFilterCommand()

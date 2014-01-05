@@ -148,9 +148,11 @@ namespace project.ViewModel
         public void SaveExecute(object parameter)
         {
 
-
+            ObservableCollection<INameId> temp = GeselecteerdeInstelling;
             GeselecteerdeInstelling[0].Add(parameter.ToString());
 
+            OnPropertyChanged("Instellingen");
+            GeselecteerdeInstelling = temp;
         }
 
 

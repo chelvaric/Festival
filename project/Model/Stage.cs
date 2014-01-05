@@ -103,8 +103,7 @@ namespace project.Model
                     stage = new Stage() { Name = reader["name"].ToString(), ID = reader["ID"].ToString() };
 
                 }
-                if (reader != null)
-                    reader.Close();
+                
                 return stage;
             }
 

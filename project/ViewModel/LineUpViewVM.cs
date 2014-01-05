@@ -26,7 +26,7 @@ namespace project.ViewModel
       
         public ObservableCollection<LineUp> LineUps
         {
-            get {  return _lineUps; }
+            get { _lineUps = LineUp.GetLineUps();  return _lineUps; }
             set { _lineUps = value; OnPropertyChanged("LineUps"); }
         }
 
@@ -34,7 +34,7 @@ namespace project.ViewModel
 
         public ObservableCollection<INameId> Stages
         {
-            get {   return _stages; }
+            get { _stages = Stage.Waardes(); return _stages; }
             set { _stages = value; OnPropertyChanged("Stages"); }
         }
 
@@ -43,7 +43,7 @@ namespace project.ViewModel
         {
             get
             {
-                
+                _festivalDays = Festival.HaalDatum().FestivalDays;
                 return _festivalDays;
             }
             set

@@ -100,16 +100,17 @@ namespace project.Model
             return Name;
         }
         
-
+        //haal de bands op
         public static ObservableCollection<Band> Bands()
         {
-           
+            try
+            {
 
                 ObservableCollection<Band> lijst = new ObservableCollection<Band>();
                 string sql = "SELECT * FROM bands";
                 DbDataReader Reader = DataBase.GetData(sql);
                 while (Reader.Read())
-                {
+                {  //leest de waarden uit en steekt ze in een model die dan aan de lijst word toegevoegd
                     Band temp = new Band();
                     temp.ID = Reader["ID"].ToString();
                     temp.Name = Reader["Name"].ToString();
@@ -121,18 +122,29 @@ namespace project.Model
                 }
 
                 AddGenres(lijst);
-                return lijst; 
-          
+                return lijst;
+            }
+            catch (Exception e)
+            {
+
+                Console.Write(e.Message);
+            
+                return new ObservableCollection<Band>();
+            }
+             
+           
         }
         public static void AddGenres(ObservableCollection<Band> lijst)
         {
-           
+
             foreach (Band item in lijst)
             {
-                ObservableCollection<Genre> tempLijst = new ObservableCollection<Genre>();
-                string sql = "SELECT bands_genres.*,genres.ID as GenreID,genres.name as GenreName FROM bands_genres INNER JOIN genres ON bands_genres.GenreID = genres.ID WHERE BandID = @BandID ";
-                DbParameter par = DataBase.AddParameter("@BandID",item.ID);
-                    DbDataReader reader = DataBase.GetData(sql,par);
+                try
+                {   //voegt de genres toe aan de model van elke band
+                    ObservableCollection<Genre> tempLijst = new ObservableCollection<Genre>();
+                    string sql = "SELECT bands_genres.*,genres.ID as GenreID,genres.name as GenreName FROM bands_genres INNER JOIN genres ON bands_genres.GenreID = genres.ID WHERE BandID = @BandID ";
+                    DbParameter par = DataBase.AddParameter("@BandID", item.ID);
+                    DbDataReader reader = DataBase.GetData(sql, par);
                     if (reader != null)
                     {
 
@@ -149,15 +161,21 @@ namespace project.Model
                         item.Genres = tempLijst;
 
                     }
-                      
-           
+
+
                 }
-          
+                catch (Exception e)
+                {
+                    Console.Write(e.Message);
+            
+                }
+            }
+            
         
         }
         public static void Add(string name,string pic,string descrp,string facebook, string twitter,ObservableCollection<Genre> genreID)
         { 
-           //hier komt de add
+           //hier word een band toegevoegd
             string sql = "INSERT INTO bands(Name,Picture,Description,Facebook,Twitter) VALUES(@Name,@Picture,@Description,@Facebook,@Twitter)";
             ParamsMaken(name, pic, descrp, facebook, twitter, sql);
            ObservableCollection<Band> temp =  Bands();
@@ -165,7 +183,7 @@ namespace project.Model
          
          foreach (Genre genre in genreID)
          {
-             
+             //hier word er een link gelegd voor de band naar elke genre die erbij hoort
              sql = "INSERT INTO bands_genres(BandID,GenreID) VALUES(@BandID,@GenreID)";
              DbParameter parid = DataBase.AddParameter("@BandID", BandID);
              DbParameter pargenreid = DataBase.AddParameter("@GenreID", genre.ID);
@@ -181,33 +199,47 @@ namespace project.Model
             DbParameter parFacebook = DataBase.AddParameter("@Facebook", facebook);
             DbParameter parTwitter = DataBase.AddParameter("@Twitter", twitter);
             DbParameter parBandID = DataBase.AddParameter("@BandID", BandID);
-            DataBase.ModifyData(sql, parName, parPic, parDescrp, parFacebook, parTwitter,parBandID);
+            if (BandID == null)
+            {
+                DataBase.ModifyData(sql, parName, parPic, parDescrp, parFacebook, parTwitter);
+            }
+            else
+            {
+                DataBase.ModifyData(sql, parName, parPic, parDescrp, parFacebook, parTwitter, parBandID);
+            }
         }
         
         public static void Edit(Band editBand)
         {
-            string sql; 
-            
-            
-            
-                    sql = "DELETE FROM bands_genres WHERE BandID = @BandID ";
-                    DbParameter parid = DataBase.AddParameter("@BandID", editBand.ID);
-                  
-                    DataBase.ModifyData( sql, parid);
+            try
+            {
+                string sql;
 
 
-                    foreach (Genre genre in editBand.Genres)
-                    {
 
-                        sql = "INSERT INTO bands_genres(BandID,GenreID) VALUES(@BandID,@GenreID)";
-                         parid = DataBase.AddParameter("@BandID", editBand.ID);
-                        DbParameter pargenreid = DataBase.AddParameter("@GenreID", genre.ID);
-                        DataBase.ModifyData( sql, parid, pargenreid);
-                    }
-        
-            sql = "UPDATE bands SET Name = @Name, Picture = @Picture, Description = @Description,Facebook = @Facebook, Twitter=@Twitter Where ID = @BandID   ";
-            ParamsMaken(editBand.Name, editBand.Picture, editBand.Description, editBand.Facebook, editBand.Twitter,sql,editBand.ID);
-       
+                sql = "DELETE FROM bands_genres WHERE BandID = @BandID ";
+                DbParameter parid = DataBase.AddParameter("@BandID", editBand.ID);
+
+                DataBase.ModifyData(sql, parid);
+
+
+                foreach (Genre genre in editBand.Genres)
+                {
+
+                    sql = "INSERT INTO bands_genres(BandID,GenreID) VALUES(@BandID,@GenreID)";
+                    parid = DataBase.AddParameter("@BandID", editBand.ID);
+                    DbParameter pargenreid = DataBase.AddParameter("@GenreID", genre.ID);
+                    DataBase.ModifyData(sql, parid, pargenreid);
+                }
+
+                sql = "UPDATE bands SET Name = @Name, Picture = @Picture, Description = @Description,Facebook = @Facebook, Twitter=@Twitter Where ID = @BandID   ";
+                ParamsMaken(editBand.Name, editBand.Picture, editBand.Description, editBand.Facebook, editBand.Twitter, sql, editBand.ID);
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+            
+            }
             
         }
 
@@ -238,26 +270,35 @@ namespace project.Model
         }
         public static Band BandByID(int id)
         {
-
-            Band temp = new Band();
-            string sql = "SELECT * FROM Bands WHERE ID = @ID";
-            DbParameter par = DataBase.AddParameter("@ID", id);
-            DbDataReader Reader = DataBase.GetData(sql, par);
-            while (Reader.Read())
+            try
             {
+                Band temp = new Band();
+                string sql = "SELECT * FROM Bands WHERE ID = @ID";
+                DbParameter par = DataBase.AddParameter("@ID", id);
+                DbDataReader Reader = DataBase.GetData(sql, par);
+                while (Reader.Read())
+                {
 
-                temp.ID = Reader["ID"].ToString();
-                temp.Name = Reader["Name"].ToString();
-                temp.Description = Reader["Description"].ToString();
-                temp.Facebook = Reader["Facebook"].ToString();
-                temp.Picture = Reader["Picture"].ToString();
-                temp.Twitter = Reader["Twitter"].ToString();
+                    temp.ID = Reader["ID"].ToString();
+                    temp.Name = Reader["Name"].ToString();
+                    temp.Description = Reader["Description"].ToString();
+                    temp.Facebook = Reader["Facebook"].ToString();
+                    temp.Picture = Reader["Picture"].ToString();
+                    temp.Twitter = Reader["Twitter"].ToString();
+
+                }
+               
+                AddGenre(temp);
+                return temp;
 
             }
-            if (Reader != null)
-                Reader.Close();
-            AddGenre(temp);
-            return temp;
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+                return new Band();
+                
+            }
+           
 
         }
 
@@ -285,6 +326,17 @@ namespace project.Model
                 }
                 return String.Empty;
             }
+        }
+
+        public bool IsValid()
+        {
+            return Validator.TryValidateObject(this, new ValidationContext(this, null, null),
+           null, true);
+        }
+
+        public void DeleteBand(int id)
+        { 
+        
         }
     }
 }

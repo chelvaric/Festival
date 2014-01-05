@@ -172,7 +172,7 @@ namespace project.Model
 
         public static void ADDLineUp(LineUp lineup)
         {
-            string sql = "INSERT INTO lineup VALUES (@From,@Till,@Date,@Stage,@Band)";
+            string sql = "INSERT INTO lineup VALUES (@From,@Till,@Date,@Band,@Stage)";
             MakePars(lineup, sql);
         
         }

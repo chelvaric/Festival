@@ -81,6 +81,7 @@ namespace project.Model
 
         public static ObservableCollection<Contactperson> GeefLijst()
         {
+            try{
             ObservableCollection<Contactperson> lijst = new ObservableCollection<Contactperson>();
             
             string sql = "Select * from contactpersons";
@@ -95,6 +96,13 @@ namespace project.Model
 
             }
             return lijst;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+                return new ObservableCollection<Contactperson>();
+
+            }
 
         }
 
@@ -110,23 +118,38 @@ namespace project.Model
         }
         public static void Add(Contactperson person)
         {
+            try{
             string sql = "INSERT INTO contactpersons(Name,City,Phone,Email,CellPhone,Company,JobRoleID) VALUES (@Name,@City,@Phone,@Email,@CellPhone,@Company,@JobRoleID)";
             AddParams(person,sql);
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+
+            }
         }
 
         private static void AddParams(Contactperson person,string sql, int ID = 0)
         {
-          
+            try
+            {
                 DbParameter id = DataBase.AddParameter("@ID", ID);
-           
-            DbParameter name = DataBase.AddParameter("@Name", person.Name);
-            DbParameter city = DataBase.AddParameter("@City", person.City);
-            DbParameter phone = DataBase.AddParameter("@Phone", person.Phone);
-            DbParameter cellphone = DataBase.AddParameter("@CellPhone", person.CellPhone);
-            DbParameter company = DataBase.AddParameter("@Company", person.Company);
-            DbParameter email = DataBase.AddParameter("@email", person.Email);
-            DbParameter jobRoleId = DataBase.AddParameter("@JobRoleId", person.JobRole.ID);
-            DataBase.ModifyData(sql, name, city, phone, cellphone, company, email, id, jobRoleId);
+
+                DbParameter name = DataBase.AddParameter("@Name", person.Name);
+                DbParameter city = DataBase.AddParameter("@City", person.City);
+                DbParameter phone = DataBase.AddParameter("@Phone", person.Phone);
+                DbParameter cellphone = DataBase.AddParameter("@CellPhone", person.CellPhone);
+                DbParameter company = DataBase.AddParameter("@Company", person.Company);
+                DbParameter email = DataBase.AddParameter("@email", person.Email);
+                DbParameter jobRoleId = DataBase.AddParameter("@JobRoleId", person.JobRole.ID);
+                DataBase.ModifyData(sql, name, city, phone, cellphone, company, email, id, jobRoleId);
+            }
+            
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+            
+            }
         }
         public static Contactperson Search(string Name)
         {
@@ -159,15 +182,30 @@ namespace project.Model
         }
         public static void Edit(Contactperson person)
         {
+            try{
             string sql = "UPDATE contactpersons SET  Name = @Name, City = @City, Phone = @Phone, CellPhone = @CellPhone, Company = @Company, JobRoleID = @JobRoleId WHERE ID = @ID";
             AddParams(person,sql,int.Parse(person.ID));
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+
+            }
         
         }
         public static void Delete(string id)
         {
-            string sql = "DELETE FROM contactpersons WHERE ID = @ID ";
-            DbParameter Id = DataBase.AddParameter("@ID", id);
-            DataBase.ModifyData(sql, Id);
+            try
+            {
+                string sql = "DELETE FROM contactpersons WHERE ID = @ID ";
+                DbParameter Id = DataBase.AddParameter("@ID", id);
+                DataBase.ModifyData(sql, Id);
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+            
+            }
         }
 
 

@@ -15,10 +15,10 @@
         </GroupBox>
         <ListBox x:Name="Lst_Instelling" HorizontalAlignment="Left" Height="106" Margin="150,289,0,0" VerticalAlignment="Top" Width="167" ItemsSource="{Binding GeselecteerdeInstelling}" DisplayMemberPath="Name" SelectedItem="{Binding GeselecteerdeItem}" />
         <TextBox x:Name="TxtNew"  HorizontalAlignment="Left" Height="19" Margin="150,399,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="167" Text="{Binding GeselecteerdeItem.Name}"  />
-        <Button Content="Add" HorizontalAlignment="Left" Height="25"  Width="72" Margin="149,424,0,0" VerticalAlignment="Top" 
-                Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName =TxtNew,Path=Text}" RenderTransformOrigin="2.8,0.764"/>
-        <Button Content="Edit" Height="25" Margin="243,424,183,0" VerticalAlignment="Top" Command="{Binding EditCommand}" RenderTransformOrigin="2.32,0.428"/>
-        <Button Content="Delete" Height="25" Margin="150,465,279,0" VerticalAlignment="Top" Command="{Binding DeleteCommand}"/>
+        <Button Content="Add" HorizontalAlignment="Left" Height="24"  Width="50" Margin="149,424,0,0" VerticalAlignment="Top" 
+                Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName =TxtNew,Path=Text}"/>
+        <Button Content="Edit" HorizontalAlignment="Left" VerticalAlignment="Top"  Height="25" Width="50" Margin="204,423,0,54" Command="{Binding EditCommand}"/>
+        <Button Content="Delete" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="25" Width="50"  Command="{Binding DeleteCommand}" Margin="259,423,0,54"/>
         <Label Content="Start datum:" HorizontalAlignment="Left" Height="28" Margin="135,49,0,0" VerticalAlignment="Top" Width="106"/>
         <Label Content="Eind datum:" HorizontalAlignment="Left" Height="28" Margin="135,114,0,0" VerticalAlignment="Top" Width="106"/>
     </Grid>

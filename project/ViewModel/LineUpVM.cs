@@ -19,12 +19,15 @@ namespace project.ViewModel
         {
             get { return "LineUp"; }
         }
+        private Band Leegeband = new Band();
+        private LineUp LeegeLineUp = new LineUp { Band = new Band()};
         public LineUpVM() 
         {
 
             SelectedLineUp = new LineUp();
-            SelectedLineUp.Band = new Band(); 
-           
+            SelectedLineUp.Band = Leegeband;
+            SelectedLineUp.From = new DateTime(1900, 4, 30);
+            SelectedLineUp.Till = new DateTime(1900, 4, 30);
             _bands = Band.Bands();
           
         
@@ -37,11 +40,18 @@ namespace project.ViewModel
             get { return _selectedDag; }
             set { _selectedDag = value; }
         }
+
+
+
+
+        private String _imagePath;
+
+        public String ImagePath
+        {
+            get {   return _imagePath; }
+            set { _imagePath = value; OnPropertyChanged("ImagePath"); }
+        }
         
-
-
-        
-
        
 
        
@@ -62,35 +72,9 @@ namespace project.ViewModel
         }
 
 
-        public ICommand LoadPicture {
+       
 
-           get { return new RelayCommand(GetString); }
-            internal set { }
-        }
-
-        private ImageSource _picSource;
-        public ImageSource PicSource {
-            get { return _picSource; }
-            set {
-                _picSource = value;
-                
-                
-            }
         
-        }
-
-        public void GetString()
-        {
-            OpenFileDialog dp = new OpenFileDialog();
-            dp.Filter = "jpeg|*.jpg|png|*.png";
-            if (dp.ShowDialog() != false)
-            {
-
-                PicSource = (ImageSource)new ImageSourceConverter().ConvertFromString(dp.FileName); ;
-              
-            }
-         
-        }
 
         private Genre _geselecteerdeGenreInAddedGenres;
 
@@ -132,14 +116,14 @@ namespace project.ViewModel
         {
             if (SelectedLineUp.Band.Genres != null)
             {
-
-                SelectedLineUp.Band.Genres.Add((Genre)par);
+                SelectedBand.Genres.Add((Genre)par);
+                SelectedBand.Genres.Add((Genre)par);
             }
             else {
 
-                SelectedLineUp.Band.Genres = new ObservableCollection<Genre>();
-                SelectedLineUp.Band.Genres.Add((Genre)par);
-                OnPropertyChanged("SelectedLineUp"); 
+                SelectedBand.Genres = new ObservableCollection<Genre>();
+                SelectedBand.Genres.Add((Genre)par);
+                OnPropertyChanged("SelectedBand"); 
             }
         
         }
@@ -191,13 +175,15 @@ namespace project.ViewModel
             genres = (ObservableCollection<Genre>)param[5];
         
             Band.Add(name, pic, descrp, facebook, twitter, genres );
+            OnPropertyChanged("Bands");
         }
         public bool CanInsert(object[] param)
         {
-            if (param != null)
+            if (SelectedBand != null)
             {
-                if (param[0].ToString() != "" && param[5] != null)
+                if (SelectedBand.Name != null)
                 {
+
                     return true;
 
                 }
@@ -206,7 +192,11 @@ namespace project.ViewModel
                     return false;
                 }
             }
-            else { return false; }
+            else
+            {
+                return false;
+            
+            }
         
         }
 
@@ -215,46 +205,73 @@ namespace project.ViewModel
         { get { return new RelayCommand(EditBand, CanEditBand); } }
         public bool CanEditBand()
         {
-            if (SelectedLineUp != null)
+            if (SelectedBand != null)
             {
-                if (SelectedLineUp.Band != null)
+                if (SelectedBand.ID != null)
                 {
-                    if (SelectedLineUp.Band.Name != null && SelectedLineUp.Band.Genres != null)
-                    {
-                        return true;
-
-                    }
-                    else { return false; }
-
+                    return SelectedBand.IsValid();
                 }
-                else { return false; }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
+
                 return false;
-            
             }
+
+            //if (SelectedLineUp != null)
+            //{
+            //    if (SelectedLineUp.Band != null)
+            //    {
+            //        if (SelectedLineUp.Band.Name != null && SelectedLineUp.Band.Genres != null)
+            //        {
+            //            return true;
+
+            //        }
+            //        else { return false; }
+
+            //    }
+            //    else { return false; }
+            //}
+            //else
+            //{
+            //    return false;
+            
+            //}
         
         }
         public void EditBand()
         {
-            if (SelectedLineUp.Band.Picture == null)
+            try
             {
-                SelectedLineUp.Band.Picture = "";
+                //set leege waardes in de strings omdat de database geen null aanvaard
+                if (SelectedLineUp.Band.Picture == null)
+                {
+                    SelectedLineUp.Band.Picture = "";
+                }
+                if (SelectedLineUp.Band.Description == null)
+                {
+                    SelectedLineUp.Band.Description = "";
+                }
+                if (SelectedLineUp.Band.Facebook == null)
+                {
+                    SelectedLineUp.Band.Facebook = "";
+                }
+                if (SelectedLineUp.Band.Twitter == null)
+                {
+                    SelectedLineUp.Band.Twitter = "";
+                }
+                Band.Edit(SelectedLineUp.Band);
             }
-            if (SelectedLineUp.Band.Description == null)
+            catch (Exception e)
             {
-                SelectedLineUp.Band.Description = "";
+
+                Console.Write(e.Message);
+            
             }
-            if (SelectedLineUp.Band.Facebook == null)
-            {
-                SelectedLineUp.Band.Facebook = "";
-            }
-            if (SelectedLineUp.Band.Twitter == null)
-            {
-                SelectedLineUp.Band.Twitter = "";
-            }
-            Band.Edit(SelectedLineUp.Band);
         
         }
 
@@ -302,16 +319,16 @@ namespace project.ViewModel
 
          public LineUp SelectedLineUp
          {
-             get { return _selectedLineUp; }
-             set { _selectedLineUp = value; SelectedBand = _selectedLineUp.Band; OnPropertyChanged("SelectedLineUp"); OnPropertyChanged("SelectedBand"); }
+             get { if (_selectedLineUp == null) { _selectedLineUp = LeegeLineUp; } return _selectedLineUp; }
+             set { _selectedLineUp = value; OnPropertyChanged("SelectedLineUp"); OnPropertyChanged("SelectedBand"); }
          }
 
        
 
          public Band SelectedBand
          {
-             get { return SelectedLineUp.Band; }
-             set { SelectedLineUp.Band = value; OnPropertyChanged("SelectedBand"); }
+             get { if (SelectedLineUp == null) { return Leegeband; } else { return _selectedLineUp.Band; } }
+             set { _selectedLineUp.Band = value;  OnPropertyChanged("SelectedBand"); }
          }
          
 
@@ -325,7 +342,7 @@ namespace project.ViewModel
          {
 
              LineUp.DeleteLineUp(SelectedLineUp.ID);
-            
+             SelectedLineUp = LeegeLineUp;
              OnPropertyChanged("LineUps");
          
          }
@@ -352,10 +369,18 @@ namespace project.ViewModel
          }
          public void AddLineUp()
          {
-             SelectedLineUp.From.AddYears(1750);
-             SelectedLineUp.Till.AddYears(1750);
-             LineUp.ADDLineUp(SelectedLineUp);
-             OnPropertyChanged("LineUps");
+             //line up toeveoegen
+             try
+             {
+                 //voor zorgen dat de years in de minumum zitten van de database
+                
+                 LineUp.ADDLineUp(SelectedLineUp);
+                 OnPropertyChanged("LineUps");
+             }
+             catch (Exception e)
+             {
+                 Console.Write(e.Message);
+             }
          }
          public bool CanAddLineUp()
          {
@@ -401,7 +426,7 @@ namespace project.ViewModel
 
                  foreach (LineUp lijnup in LineUps)
                  {
-                     if(lijnup.Date.Equals(SelectedLineUp.Date) &&  lijnup.ID != SelectedLineUp.ID)
+                     if(lijnup.Date.Equals(SelectedLineUp.Date) &&  lijnup.ID != SelectedLineUp.ID && lijnup.Stage.ID == SelectedLineUp.Stage.ID)
                      {
 
                      if (lijnup.From.TimeOfDay<=SelectedLineUp.From.TimeOfDay && lijnup.Till.TimeOfDay > SelectedLineUp.From.TimeOfDay)
@@ -431,6 +456,40 @@ namespace project.ViewModel
 
                  LineUp.EditLineUp(SelectedLineUp);
              
+             }
+
+
+             public ICommand DeleteBandCommand
+             {
+                 get { return new RelayCommand(DeleteBand,CanDeleteBand); }
+             
+             }
+
+             public void DeleteBand()
+             { 
+                //doe iets
+             }
+
+             public bool CanDeleteBand()
+             {
+                 if (SelectedBand != null)
+                 {
+                     if (SelectedBand.ID != null)
+                     {
+
+                         return true;
+
+                     }
+                     else
+                     {
+
+                         return false;
+                     }
+                 }
+                 else
+                 {
+                     return false;
+                 }
              }
 
     }
